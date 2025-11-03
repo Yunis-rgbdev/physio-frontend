@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// API SERVICES
+import 'package:telewehab/api_service.dart';
+
+// USER MODELS AND ACTIVE SESSION MODELS
+import 'package:telewehab/models/user_model.dart';
+import 'package:telewehab/utils/user_session.dart';
+
 mixin InputValidationMixin {
   String? validateNationalCode(String? value) {
     if (value == null || value.isEmpty) {
@@ -23,6 +30,7 @@ class LoginController extends GetxController with InputValidationMixin {
   RxString password = ''.obs;
   TextEditingController nationalCodeController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  RxBool isLoading = false.obs;
 
    @override
   void onInit() {
@@ -52,4 +60,28 @@ class LoginController extends GetxController with InputValidationMixin {
     nationalCodeController.dispose();
     super.onClose();
   }
+
+
+  void sendLogin() async {
+  try {
+    isLoading.value = true;
+    final responseData = await ApiService.login(
+      nationalCode.value.trim(),
+      password.value.trim(),
+    );
+    final user = User.fromJson(responseData["user"]);
+
+    UserSession.saveSession(
+      responseData["access"],
+      responseData["refresh"],
+      user,
+  );
+Get.offAllNamed('/home');
+  } catch (e) {
+    Get.snackbar('Login Failed', e.toString(),
+        backgroundColor: Colors.redAccent, colorText: Colors.white);
+  } finally {
+    isLoading.value = false;
+  }
+}
 }

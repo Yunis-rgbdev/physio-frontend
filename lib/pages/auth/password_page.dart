@@ -173,8 +173,11 @@ class _InputSection extends StatelessWidget {
                 SizedBox(
                   height: 50,
                   width: responsive.buttonSize,
-                  child: ElevatedButton(
-                    onPressed: () => Get.to(PasswordView()),
+                  child: Obx(() => _controller.isLoading.value
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                    // now before this we must authorize user with backend api calling
+                    onPressed: () {},
                     
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromRGBO(100, 181, 246, 1),
@@ -185,7 +188,7 @@ class _InputSection extends StatelessWidget {
                       
                     ),
                     child: Text('ادامه', style: PersianFonts.Vazir.copyWith(fontSize: 18, color: Colors.white),),
-                  ),
+                  ),)
                 ),
                 Padding(padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                  child: Row(

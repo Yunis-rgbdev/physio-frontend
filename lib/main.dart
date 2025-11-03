@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:telewehab/page_routing_controller.dart';
 import 'package:telewehab/pages/auth/login_page.dart';
 import 'package:telewehab/pages/auth/password_page.dart';
 import 'package:telewehab/pages/auth/signup_page.dart';
 import 'package:telewehab/pages/home.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init(); // ✅ Initialize persistent storage
   runApp(PhiysioConnect());
 }
 
