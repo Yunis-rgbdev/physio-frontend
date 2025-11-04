@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_fonts/persian_fonts.dart';
 import 'package:telewehab/pages/auth/password_page.dart';
+import 'package:telewehab/pages/auth/signup_page.dart';
 import 'auth_controllers/login_controller.dart';
 
 class LoginView extends StatelessWidget {
@@ -17,7 +18,7 @@ class LoginView extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(children: [
-          _InputSection(responsive: responsive),
+          _LoginSection(responsive: responsive),
         ]),
       ),
     );
@@ -37,9 +38,9 @@ class ResponsiveHelper {
   double get buttonSize => (screenWidth * 0.3).clamp(350.0, 400.0);
 }
 
-class _InputSection extends StatelessWidget {
+class _LoginSection extends StatelessWidget {
   final ResponsiveHelper responsive;
-  const _InputSection({required this.responsive});
+  const _LoginSection({required this.responsive});
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +162,7 @@ class _InputSection extends StatelessWidget {
                             style: PersianFonts.Vazir.copyWith(
                                 fontSize: 12, color: Colors.black)),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () => Get.to(SignupView()),
                           child: Text(
                             'کلیک کنید',
                             style: PersianFonts.Vazir.copyWith(

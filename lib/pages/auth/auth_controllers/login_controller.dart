@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // API SERVICES
-import 'package:telewehab/api_service.dart';
+import 'package:telewehab/utils/api_service.dart';
 
 // USER MODELS AND ACTIVE SESSION MODELS
 import 'package:telewehab/models/user_model.dart';

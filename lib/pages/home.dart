@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:telewehab/utils/user_session.dart';
-// import 'package:telewehab/models/user_model.dart';
 import 'package:telewehab/models/operator_models.dart';
 import 'package:telewehab/models/patient_models.dart';
 
 class HomeView extends StatelessWidget {
+  const HomeView({super.key});
+
+  void _logout() {
+    UserSession.clearSession(); // clear user + tokens
+    Get.offAllNamed('/login');  // navigate to login page and remove all routes
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = UserSession.user;
@@ -18,7 +25,16 @@ class HomeView extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("Welcome ${user.fullName}")),
+      appBar: AppBar(
+        title: Text("Welcome ${user.fullName}"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+            onPressed: _logout,
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -26,9 +42,7 @@ class HomeView extends StatelessWidget {
           children: [
             Text("National Code: ${user.nationalCode}"),
             Text("Role: ${_getRoleName(user.role)}"),
-
             const SizedBox(height: 16),
-
             if (user.profile is Operator)
               _buildOperatorProfile(user.profile as Operator)
             else if (user.profile is Patient)
@@ -52,24 +66,21 @@ class HomeView extends StatelessWidget {
     }
   }
 
-  Widget _buildOperatorProfile(Operator operator) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Specialty: ${operator.specialty ?? '-'}"),
-        Text("Clinic: ${operator.clinicAddress ?? '-'}"),
-        Text("Phone: ${operator.phoneNumber ?? '-'}"),
-      ],
-    );
-  }
+  Widget _buildOperatorProfile(Operator operator) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Specialty: ${operator.specialty ?? '-'}"),
+          Text("Clinic: ${operator.clinicAddress ?? '-'}"),
+          Text("Phone: ${operator.phoneNumber ?? '-'}"),
+        ],
+      );
 
-  Widget _buildPatientProfile(Patient patient) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Phone: ${patient.phoneNumber ?? '-'}"),
-        Text("National Code: ${patient.nationalCode ?? '-'}"),
-      ],
-    );
-  }
+  Widget _buildPatientProfile(Patient patient) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Phone: ${patient.phoneNumber ?? '-'}"),
+          Text("Birth date: ${patient.birthDate ?? '-'}"),
+          Text("Gender: ${patient.gender ?? '-'}"),
+        ],
+      );
 }

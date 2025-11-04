@@ -72,9 +72,14 @@ class _InputSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 90),
-                   child: Text('PhysioConnect', style: TextStyle(color: Colors.blue[300], fontSize: 26, fontWeight: FontWeight.bold),)
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 90),
+                       child: Text('PhysioConnect', style: TextStyle(color: Colors.blue[300], fontSize: 26, fontWeight: FontWeight.bold),)
+                    ),
+                    Align(alignment: Alignment.centerLeft,child: Padding(padding: EdgeInsets.all(8), child: IconButton(onPressed: Get.back, icon: Icon(Icons.arrow_forward_rounded))))
+                  ],
                 ),
                 const SizedBox(height: 150,),
                 Center(
@@ -177,7 +182,7 @@ class _InputSection extends StatelessWidget {
                   ? CircularProgressIndicator()
                   : ElevatedButton(
                     // now before this we must authorize user with backend api calling
-                    onPressed: () {},
+                    onPressed: _controller.sendLogin,
                     
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromRGBO(100, 181, 246, 1),
