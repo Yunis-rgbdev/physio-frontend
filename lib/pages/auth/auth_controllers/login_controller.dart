@@ -75,13 +75,13 @@ class LoginController extends GetxController with InputValidationMixin {
       responseData["access"],
       responseData["refresh"],
       user,
-  );
-Get.offAllNamed('/home');
-  } catch (e) {
-    Get.snackbar('Login Failed', e.toString(),
+    );
+    Get.offAllNamed('/home');
+    } catch (e) {
+      Get.snackbar('Login Failed', e.toString(),
         backgroundColor: Colors.redAccent, colorText: Colors.white);
-  } finally {
-    isLoading.value = false;
+    } finally {
+      isLoading.value = false;
+    }
   }
-}
 }

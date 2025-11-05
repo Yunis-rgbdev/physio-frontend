@@ -72,13 +72,16 @@ class _InputSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               
               children: [
-                Row(
+                Stack(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 90),
-                       child: Text('PhysioConnect', style: TextStyle(color: Colors.blue[300], fontSize: 26, fontWeight: FontWeight.bold),)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                         child: Text('PhysioConnect', style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.bold),)
+                      ),
                     ),
-                    Align(alignment: Alignment.centerLeft,child: Padding(padding: EdgeInsets.all(8), child: IconButton(onPressed: Get.back, icon: Icon(Icons.arrow_forward_rounded))))
+                    Align(alignment: Alignment.centerRight, child: Padding(padding: EdgeInsets.all(8), child: IconButton(onPressed: Get.back, icon: Icon(Icons.arrow_back_rounded))))
                   ],
                 ),
                 const SizedBox(height: 150,),
@@ -97,9 +100,9 @@ class _InputSection extends StatelessWidget {
                 
                 // Add more widgets for login form here
                 
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
                   SizedBox(
-                  height: 80,
+                  height: 65,
                   width: responsive.inputSize,
                     child: TextFormField(
                       enabled: false,
@@ -107,39 +110,43 @@ class _InputSection extends StatelessWidget {
                         onChanged: (value) => _controller.nationalCode.value,
                         // validator: loginController.validateNationalCode,
                         decoration: InputDecoration(
-                        labelText: 'کدملی',
-                        labelStyle: PersianFonts.Shabnam.copyWith(),
-                        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide(color: Color.fromRGBO(100, 181, 246, 1), width: 1)
+                          labelText: 'کد ملی',
+                          constraints: BoxConstraints.expand(height: 70, width: responsive.inputSize),
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          floatingLabelStyle: PersianFonts.Shabnam.copyWith(
+                            color: Color.fromRGBO(62, 104, 255, 1), 
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 18,
+                          ),
+                          labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26),
+                          contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
+                          focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Colors.red, width: 1)
                         ),
-                        focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: Colors.red, width: 1)
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(
-                          color: const Color.fromRGBO(100, 181, 246, 1),
-                          width: 1.0,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32),
+                          borderSide: BorderSide(
+                            color: Colors.black12,
+                            width: 1.5,
+                          ),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Colors.red, width: 1)
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Color.fromRGBO(62, 104, 255, 1), width: 1)
                         ),
                       ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: Colors.red, width: 1)
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: Color.fromRGBO(100, 181, 246, 1), width: 1)
-                      ),
-                    ),
                   ),
                 ),
-                const SizedBox(height: 0),
+                
                 // Password Field
                 SizedBox(
-                  height: 80,
+                  height: 65,
                   width: responsive.inputSize,
                     child: TextFormField(
                       enabled: true,
@@ -148,33 +155,40 @@ class _InputSection extends StatelessWidget {
                         // validator: loginController.validateNationalCode,
                         
                         decoration: InputDecoration(
-                        labelText: 'رمز ورود',
-                        labelStyle: PersianFonts.Shabnam.copyWith(),
-                        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: Colors.red, width: 1)
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(
-                          color: const Color.fromRGBO(100, 181, 246, 1),
-                          width: 1.0,
+                          labelText: 'رمز ورود',
+                          constraints: BoxConstraints.expand(height: 70, width: responsive.inputSize),
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          floatingLabelStyle: PersianFonts.Shabnam.copyWith(
+                            color: Color.fromRGBO(62, 104, 255, 1), 
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 18,
+                          ),
+                          labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26),
+                          contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
+                          focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Colors.red, width: 1)
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32),
+                          borderSide: BorderSide(
+                            color: Colors.black12,
+                            width: 1.5,
+                          ),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Colors.red, width: 1)
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Color.fromRGBO(62, 104, 255, 1), width: 1)
                         ),
                       ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: Colors.red, width: 1)
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: Color.fromRGBO(100, 181, 246, 1), width: 1)
-                      ),
-                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 SizedBox(
                   height: 50,
                   width: responsive.buttonSize,
@@ -185,10 +199,12 @@ class _InputSection extends StatelessWidget {
                     onPressed: _controller.sendLogin,
                     
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(100, 181, 246, 1),
+                      backgroundColor: 
+                        // Color.fromRGBO(100, 181, 246, 1),
+                        Colors.black,
                       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(32),
                       ),
                       
                     ),
@@ -210,14 +226,14 @@ class _InputSection extends StatelessWidget {
                         'کلیک کنید',
                          style: PersianFonts.Vazir.copyWith(
                           fontSize: 12,
-                          color: Color.fromRGBO(100, 181, 246, 1)
+                          color: Color.fromRGBO(62, 104, 255, 1),
                         ),
                       ),
                     ),
                   ],
                 )),
 
-                Padding(padding: EdgeInsets.symmetric(vertical: 24, horizontal: 12), child: Container(height: 1, width: 400, color:  Colors.grey,),),
+                // Padding(padding: EdgeInsets.symmetric(vertical: 24, horizontal: 12), child: Container(height: 1, width: 400, color:  Colors.grey,),),
 
                
               ],

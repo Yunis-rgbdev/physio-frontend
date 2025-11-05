@@ -1,6 +1,6 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:telewehab/utils/api_service.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 mixin InputValidationMixin {
   String? validateNationalCode(String? value) {
@@ -19,13 +19,18 @@ mixin InputValidationMixin {
 
 class SignupController extends GetxController with InputValidationMixin {
   final formKey = GlobalKey<FormState>();
+  RxBool isLoading = false.obs;
 
   TextEditingController nationalCodeController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController birthDateController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
   RxString nationalCode = ''.obs;
   RxString fullName = ''.obs;
   RxString phoneNumber = ''.obs;
+  RxString birthDate = ''.obs;
+  RxString gender = ''.obs;
 
   @override
   void onInit() {
@@ -46,5 +51,48 @@ class SignupController extends GetxController with InputValidationMixin {
         phoneNumber.value = phoneNumberController.text;
       }
     );
+    birthDateController.addListener(
+      () {
+        birthDate.value = birthDateController.text;
+      }
+    );
+    genderController.addListener(
+      () {
+        gender.value = genderController.text;
+      }
+    );
+
+    bool validateForm() => formKey.currentState?.validate() ?? false;
+
+    void submit() {
+      if (validateForm()) {
+        Get.snackbar('موفق', 'ورود موفقیت‌آمیز بود');
+      } else {
+        Get.snackbar('خطا', 'کدملی معتبر نیست',
+          backgroundColor: Colors.red[100], colorText: Colors.black);
+      }
+    }
+
+    @override
+    void onClose() {
+      nationalCodeController.dispose();
+      super.onClose();
+    }
+
+    void sendRegister() async {
+    try {
+      isLoading.value = true;
+      // final responseData = await ApiService.login(
+      // nationalCode.value.trim(),
+      // password.value.trim(),
+      // );
+      Get.offAllNamed('/login');
+      } catch (e) {
+        Get.snackbar('registeration Failed', e.toString(),
+          backgroundColor: Colors.redAccent, colorText: Colors.white);
+      } finally {
+        isLoading.value = false;
+      }
+    }
   }
 }
