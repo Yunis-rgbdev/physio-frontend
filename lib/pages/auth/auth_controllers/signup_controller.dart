@@ -38,6 +38,7 @@ class SignupController extends GetxController with InputValidationMixin {
     super.onInit();
     nationalCodeController.addListener(
       () {
+        
         nationalCode.value = nationalCodeController.text;
       }
     );
