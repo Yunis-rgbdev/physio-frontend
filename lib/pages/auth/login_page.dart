@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:persian_fonts/persian_fonts.dart';
 import 'package:telewehab/pages/auth/password_page.dart';
 import 'package:telewehab/pages/auth/signup_page.dart';
+import 'package:telewehab/pages/operator/main_layout.dart';
 import 'auth_controllers/login_controller.dart';
 
 class LoginView extends StatelessWidget {
@@ -195,6 +196,7 @@ class _LoginSection extends StatelessWidget {
                   //     color: Colors.grey,
                   //   ),
                   // ),
+                  ElevatedButton(onPressed: () => Get.to(OperatorMainLayout()), child: Text('Operator Dashboard Test'))
                 ],
               ),
             ),

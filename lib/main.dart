@@ -6,6 +6,7 @@ import 'package:telewehab/pages/auth/login_page.dart';
 import 'package:telewehab/pages/auth/password_page.dart';
 import 'package:telewehab/pages/auth/signup_page.dart';
 import 'package:telewehab/pages/home.dart';
+import 'package:telewehab/pages/operator/main_layout.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,7 @@ class PhiysioConnect extends StatelessWidget {
         GetPage(name: '/login/password', page: () => PasswordView()),
         GetPage(name: '/auth/register', page: () => SignupView()),
         GetPage(name: '/home', page: () => HomeView()),
+        GetPage(name: '/operator', page: () => OperatorMainLayout()),
         // GetPage(name: "/fourth", page: () => Fourth()),
       ],
     );
@@ -42,7 +44,8 @@ class Home extends StatelessWidget {
   final pages = [
     HomeView(),
     LoginView(),
-    SignupView()
+    SignupView(),
+    OperatorMainLayout()
   ];
 
   @override
