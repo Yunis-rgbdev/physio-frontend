@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/response/client_response.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:get/get.dart';
 import 'package:persian_fonts/persian_fonts.dart';
 import 'package:shamsi_date/shamsi_date.dart';
-import 'package:telewehab/models/user_model.dart';
 import 'package:telewehab/utils/user_session.dart';
 import 'dashboard_page.dart';
 import 'patient_page.dart';
 import 'appointments_page.dart';
 import 'statistics_page.dart';
 import 'messages_page.dart';
-import 'management_page.dart';
+import 'medical_file.dart';
 import 'tools_page.dart';
 import 'settings_page.dart';
 
@@ -41,7 +39,7 @@ class OperatorMainLayout extends StatelessWidget {
     AppointmentsPage(),
     StatisticsPage(),
     MessagesPage(),
-    ManagementPage(),
+    MedicalFilePage(),
     ToolsPage(),
     SettingsPage(),
   ];
