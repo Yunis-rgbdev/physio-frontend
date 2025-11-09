@@ -1,3 +1,5 @@
+// patient_models.dart
+
 class Patient {
   final String id;
   final String? nationalCode;
@@ -23,12 +25,12 @@ class Patient {
     return Patient(
       id: json["id"] ?? "",
       nationalCode: json["national_code"],
-      fullName: json["fullName"],
+      fullName: json["full_name"],
       birthDate: json["birth_date"],
       gender: json["gender"],
       phoneNumber: json["phone_number"],
-      vasScore: json['vasScore'].toDouble(),
-      lastUpdate: json['lastUpdate'],
+      vasScore: (json['vasScore'] ?? 0).toDouble(),
+      lastUpdate: json['lastUpdate'] ?? '',
     );
   }
 }

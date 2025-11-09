@@ -109,11 +109,11 @@ class PatientHeaderCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Diane Cooper',
+                      'Name placeholder',
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'diane.cooper@email.com',
+                      'email placeholder',
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                   ],
@@ -124,11 +124,11 @@ class PatientHeaderCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildStatBox('15', 'Appointments'),
+                    _buildStatBox('-', 'Appointments'),
                     SizedBox(width: 7.5),
                     Container(height: 30, width: 1, color: Colors.grey,),
                     SizedBox(width: 7.5),
-                    _buildStatBox('2', 'Upcoming'),
+                    _buildStatBox('-', 'Upcoming'),
                   ],
                 ),
               ),
@@ -519,6 +519,7 @@ class FilesDocumentsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Color(0xFFF8F9FB),
         borderRadius: BorderRadius.circular(8),
+        
         border: Border.all(color: Color(0xFFE0E0E0)),
       ),
       child: Row(

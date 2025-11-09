@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/response/client_response.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:get/get.dart';
 import 'package:persian_fonts/persian_fonts.dart';
 import 'package:shamsi_date/shamsi_date.dart';
+import 'package:telewehab/models/user_model.dart';
+import 'package:telewehab/utils/user_session.dart';
 import 'dashboard_page.dart';
 import 'patient_page.dart';
 import 'appointments_page.dart';
@@ -211,7 +214,8 @@ class OperatorMainLayout extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'لوکاس دیویدسون',
+                    UserSession.currentUser?.fullName ?? 'no name',
+                    
                     style: PersianFonts.Vazir.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

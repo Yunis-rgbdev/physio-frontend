@@ -1,3 +1,5 @@
+// operator_models.dart
+
 class Operator {
   final String id;
   final String? specialty;

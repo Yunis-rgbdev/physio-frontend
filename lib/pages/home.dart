@@ -8,13 +8,13 @@ class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   void _logout() {
-    UserSession.clearSession(); // clear user + tokens
+    UserSession.clear(); // clear user + tokens
     Get.offAllNamed('/login');  // navigate to login page and remove all routes
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = UserSession.user;
+    final user = UserSession.currentUser;
 
     if (user == null) {
       return const Scaffold(

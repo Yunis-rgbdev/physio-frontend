@@ -1,3 +1,5 @@
+// user_model.dart
+
 import 'package:telewehab/models/patient_models.dart';
 import 'package:telewehab/models/operator_models.dart';
 
@@ -5,6 +7,7 @@ class User {
   final String id;
   final String nationalCode;
   final String fullName;
+  final dynamic email;
   final int role;
   final dynamic profile; // Can hold either Patient or Operator
 
@@ -13,6 +16,7 @@ class User {
     required this.nationalCode,
     required this.fullName,
     required this.role,
+    this.email,
     this.profile,
   });
 
