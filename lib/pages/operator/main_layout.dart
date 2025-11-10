@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:persian_fonts/persian_fonts.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:telewehab/models/user_model.dart';
+import 'package:telewehab/pages/operator/operator_controllers/dashboard_controller.dart';
 import 'package:telewehab/utils/user_session.dart';
 import 'dashboard_page.dart';
 import 'patient_page.dart';
@@ -32,6 +33,7 @@ class OperatorMainLayout extends StatelessWidget {
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
   final _key = GlobalKey<ScaffoldState>();
   final RxInt currentIndex = 0.obs;
+  final DashboardController _dcontroller = Get.put(DashboardController());
   
   
 
@@ -136,7 +138,7 @@ class OperatorMainLayout extends StatelessWidget {
                     child: TextFormField(
                         // onChanged: (value) => loginController.nationalCode.value = value,
                         // validator: loginController.validateNationalCode,
-                        // controller: loginController.nationalCodeController,
+                        controller: _dcontroller.nationalCodeSearchController,
                         decoration: InputDecoration(
                           // labelText: 'جستجو',
                           constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 250 : 170),
@@ -150,7 +152,12 @@ class OperatorMainLayout extends StatelessWidget {
                           hintStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26, fontSize: 16),
                           labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26),
                           contentPadding: EdgeInsets.symmetric( horizontal: 16),
-                          suffixIcon: Icon(Icons.search),
+                          suffix: IconButton(
+                            onPressed: () {
+                              _dcontroller.searchPatient(_dcontroller.nationalCodeSearchController.text);
+                            }, 
+                            icon: Icon(Icons.search),
+                          ),
                           suffixIconColor: Colors.black26,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
                           focusedErrorBorder: OutlineInputBorder(

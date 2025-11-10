@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:telewehab/pages/operator/main_layout.dart';
 
 // API SERVICES
 import 'package:telewehab/utils/api_service.dart';
@@ -76,7 +77,7 @@ class LoginController extends GetxController with InputValidationMixin {
       responseData["refresh"],
       user,
     );
-    Get.offAllNamed('/home');
+    Get.to(OperatorMainLayout());
     } catch (e) {
       Get.snackbar('Login Failed', e.toString(),
         backgroundColor: Colors.redAccent, colorText: Colors.white);

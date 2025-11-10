@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:telewehab/pages/operator/operator_controllers/dashboard_controller.dart';
+import 'package:telewehab/utils/user_session.dart';
+import 'package:get/get.dart';
 
 class PatientsPage extends StatelessWidget {
   @override
@@ -86,6 +89,7 @@ class PatientsPage extends StatelessWidget {
 class PatientHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final DashboardController _controller = Get.find<DashboardController>();
     return Container(
       padding: EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -101,17 +105,36 @@ class PatientHeaderCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=47'),
+                backgroundImage: NetworkImage('https://'),
               ),
               SizedBox(width: 20),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Name placeholder',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    Obx(
+                      () {
+                        if (_controller.isLoading.value) {
+                          return const CircularProgressIndicator();
+                        } else if (_controller.error.isNotEmpty) {
+                          return Text(
+                            _controller.error.value,
+                            style: const TextStyle(color: Colors.red),
+                          );
+                        } else if (_controller.patient.value != null) {
+                          final p = _controller.patient.value!;
+                          return Text(
+                            p.fullName ?? 'No Name Availabale',
+                          );
+                        } else {
+                          return const Text("No patient searched yet.");
+                        }
+                      } 
                     ),
+                    // Text(
+                    //   _controller. ?? 'no name found',
+                    //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    // ),
                     Text(
                       'email placeholder',
                       style: TextStyle(color: Colors.grey[600]),
@@ -171,11 +194,12 @@ class PatientHeaderCard extends StatelessWidget {
 
 // ========== PATIENT INFO GRID ==========
 class PatientInfoGrid extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildInfoRow('Gender', 'Female', 'Birthday', 'Feb 24th, 1997'),
+        _buildInfoRow('Gender', '', 'Birthday', 'Feb 24th, 1997'),
         _buildInfoRow('Phone Number', '(239) 555-0108', 'ZIP Code', '65649'),
         _buildInfoRow('Street Address', 'Jl. Diponegoro No. 21', 'City', 'Cilocap'),
         _buildInfoRow('Member Status', 'Active Member', 'Registered Date', 'Feb 24th, 1997'),
