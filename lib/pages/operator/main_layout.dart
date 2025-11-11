@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/response/client_response.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:get/get.dart';
 import 'package:persian_fonts/persian_fonts.dart';
@@ -12,7 +11,7 @@ import 'patient_page.dart';
 import 'appointments_page.dart';
 import 'statistics_page.dart';
 import 'messages_page.dart';
-import 'management_page.dart';
+import 'medical_file.dart';
 import 'tools_page.dart';
 import 'settings_page.dart';
 
@@ -43,7 +42,7 @@ class OperatorMainLayout extends StatelessWidget {
     AppointmentsPage(),
     StatisticsPage(),
     MessagesPage(),
-    ManagementPage(),
+    MedicalFilePage(),
     ToolsPage(),
     SettingsPage(),
   ];
@@ -138,7 +137,7 @@ class OperatorMainLayout extends StatelessWidget {
                     child: TextFormField(
                         // onChanged: (value) => loginController.nationalCode.value = value,
                         // validator: loginController.validateNationalCode,
-                        controller: _dcontroller.nationalCodeSearchController,
+                        controller: _dcontroller.nationalCodeController,
                         decoration: InputDecoration(
                           // labelText: 'جستجو',
                           constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 250 : 170),
@@ -154,7 +153,7 @@ class OperatorMainLayout extends StatelessWidget {
                           contentPadding: EdgeInsets.symmetric( horizontal: 16),
                           suffix: IconButton(
                             onPressed: () {
-                              _dcontroller.searchPatient(_dcontroller.nationalCodeSearchController.text);
+                              _dcontroller.searchPatient(_dcontroller.nationalCodeController.text);
                             }, 
                             icon: Icon(Icons.search),
                           ),
