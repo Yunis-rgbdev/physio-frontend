@@ -1,9 +1,10 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:get/get.dart';
 import 'package:persian_fonts/persian_fonts.dart';
 import 'package:shamsi_date/shamsi_date.dart';
-import 'package:telewehab/models/user_model.dart';
+import 'package:telewehab/pages/auth/login_page.dart';
 import 'package:telewehab/pages/operator/operator_controllers/dashboard_controller.dart';
 import 'package:telewehab/utils/user_session.dart';
 import 'dashboard_page.dart';
@@ -12,7 +13,7 @@ import 'appointments_page.dart';
 import 'statistics_page.dart';
 import 'messages_page.dart';
 import 'medical_file.dart';
-import 'tools_page.dart';
+import 'tasking/task_management.dart';
 import 'settings_page.dart';
 
 class ResponsiveHelper {
@@ -43,7 +44,7 @@ class OperatorMainLayout extends StatelessWidget {
     StatisticsPage(),
     MessagesPage(),
     MedicalFilePage(),
-    ToolsPage(),
+    PhysioTasksPage(),
     SettingsPage(),
   ];
 
@@ -79,6 +80,7 @@ class OperatorMainLayout extends StatelessWidget {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
+    final AppBarBlurController _appController = Get.put(AppBarBlurController());
     final screenWidth = MediaQuery.of(context).size.width;
     final isDesktop;
     if (screenWidth > 720) {
@@ -86,17 +88,23 @@ class OperatorMainLayout extends StatelessWidget {
     } else {
       isDesktop = false;
     }
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: MediaQuery.of(context).size.width < 1024
+    return PreferredSize(
+    preferredSize: const Size.fromHeight(kToolbarHeight),
+    child: Obx(() {
+      final blur = _appController.blurValue;
+      final opacity = _appController.opacity;
+
+      return AppBar(
+        backgroundColor: Colors.white.withOpacity(opacity),
+        elevation: 0,
+        leading: MediaQuery.of(context).size.width < 1024
           ? IconButton(
               icon: Icon(Icons.menu, color: Colors.black87),
               onPressed: () => _key.currentState?.openDrawer(),
             )
           : null,
       automaticallyImplyLeading: MediaQuery.of(context).size.width < 1024,
-      title: Row(
+        title: Row(
         children: [
           if (MediaQuery.of(context).size.width >= 1024)
             Container(
@@ -150,12 +158,13 @@ class OperatorMainLayout extends StatelessWidget {
                           hintText: 'جستجو',
                           hintStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26, fontSize: 16),
                           labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26),
-                          contentPadding: EdgeInsets.symmetric( horizontal: 16),
+                          contentPadding: EdgeInsets.symmetric( horizontal: 16, vertical: 16),
                           suffix: IconButton(
+                            padding: EdgeInsets.all(8),
                             onPressed: () {
                               _dcontroller.searchPatient(_dcontroller.nationalCodeController.text);
                             }, 
-                            icon: Icon(Icons.search),
+                            icon: Icon(Icons.search, size: 20,),
                           ),
                           suffixIconColor: Colors.black26,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
@@ -183,11 +192,9 @@ class OperatorMainLayout extends StatelessWidget {
                       ),
                   ),
                 ),
-            
-            
-        ],
-      ),
-      actions: [
+              ],
+            ),
+            actions: [
         isDesktop ?
         Align(
           alignment: Alignment.center,
@@ -200,7 +207,7 @@ class OperatorMainLayout extends StatelessWidget {
                     Text('${Jalali.now().year}/${Jalali.now().month}/${Jalali.now().day}', style: TextStyle(fontSize: 14, color: Colors.black87),),
                     // Text(
                     //   'شنبه، ۲۲ ژانویه ۲۰۲۲ ۱۹:۱۶',
-                    //   style: PersianFonts.Vazir.copyWith(
+                    //   style: PersianFonts.Shabnam.copyWith(
                     //     fontSize: 14,
                     //     color: Colors.black54,
                     //   ),
@@ -222,7 +229,7 @@ class OperatorMainLayout extends StatelessWidget {
                   Text(
                     UserSession.currentUser?.fullName ?? 'no name',
                     
-                    style: PersianFonts.Vazir.copyWith(
+                    style: PersianFonts.Shabnam.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -248,7 +255,189 @@ class OperatorMainLayout extends StatelessWidget {
           ),
         ),
       ],
-    );
+        flexibleSpace: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withOpacity(opacity),
+                    Colors.white.withOpacity((opacity * 0.85).clamp(0.0, 1.0)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }),
+  );
+    // AppBar(
+    //   backgroundColor: Colors.white,
+    //   elevation: 0,
+    //   leading: MediaQuery.of(context).size.width < 1024
+    //       ? IconButton(
+    //           icon: Icon(Icons.menu, color: Colors.black87),
+    //           onPressed: () => _key.currentState?.openDrawer(),
+    //         )
+    //       : null,
+    //   automaticallyImplyLeading: MediaQuery.of(context).size.width < 1024,
+    //   title: Row(
+    //     children: [
+    //       if (MediaQuery.of(context).size.width >= 1024)
+    //         Container(
+    //       padding: EdgeInsets.all(16),
+    //       child: Row(
+    //         children: [
+    //           Container(
+    //             padding: EdgeInsets.all(8),
+    //             decoration: BoxDecoration(
+    //               color: Color(0xFF3E68FF),
+    //               borderRadius: BorderRadius.circular(8),
+    //             ),
+    //             child: Icon(
+    //               Icons.local_hospital,
+    //               color: Colors.white,
+    //               size: 24,
+    //             ),
+    //           ),
+    //           if (isDesktop) ...[
+    //             SizedBox(width: 12),
+    //             Text(
+    //               'SCAIL HEALTH',
+    //               style: TextStyle(
+    //                 fontSize: 16,
+    //                 fontWeight: FontWeight.bold,
+    //                 color: Colors.black87,
+    //                 letterSpacing: 1.2,
+    //               ),
+    //             ),
+    //           ],
+    //         ],
+    //       ),
+    //     ),
+    //     const SizedBox(width: 18.0),
+    //     SizedBox(
+    //               // height: 65,
+    //               // width: isDesktop ? 200 : 100,
+    //                 child: TextFormField(
+    //                     // onChanged: (value) => loginController.nationalCode.value = value,
+    //                     // validator: loginController.validateNationalCode,
+    //                     controller: _dcontroller.nationalCodeController,
+    //                     decoration: InputDecoration(
+    //                       // labelText: 'جستجو',
+    //                       constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 250 : 170),
+    //                       floatingLabelBehavior: FloatingLabelBehavior.never,
+    //                       floatingLabelStyle: PersianFonts.Shabnam.copyWith(
+    //                         color: Color.fromRGBO(62, 104, 255, 1), 
+    //                         fontWeight: FontWeight.bold, 
+    //                         fontSize: 18,
+    //                       ),
+    //                       hintText: 'جستجو',
+    //                       hintStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26, fontSize: 16),
+    //                       labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26),
+    //                       contentPadding: EdgeInsets.symmetric( horizontal: 16),
+    //                       suffix: IconButton(
+    //                         onPressed: () {
+    //                           _dcontroller.searchPatient(_dcontroller.nationalCodeController.text);
+    //                         }, 
+    //                         icon: Icon(Icons.search),
+    //                       ),
+    //                       suffixIconColor: Colors.black26,
+    //                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
+    //                       focusedErrorBorder: OutlineInputBorder(
+    //                       borderRadius: BorderRadius.circular(50),
+    //                       borderSide: BorderSide(color: Colors.red, width: 1)
+                          
+    //                     ),
+    //                     enabledBorder: OutlineInputBorder(
+    //                       borderRadius: BorderRadius.circular(32),
+    //                       borderSide: BorderSide(
+    //                         color: Colors.black12,
+    //                         width: 1.5,
+    //                       ),
+    //                     ),
+    //                     errorBorder: OutlineInputBorder(
+    //                       borderRadius: BorderRadius.circular(50),
+    //                       borderSide: BorderSide(color: Colors.red, width: 1)
+    //                     ),
+    //                     errorStyle: PersianFonts.Shabnam.copyWith(),
+    //                     focusedBorder: OutlineInputBorder(
+    //                       borderRadius: BorderRadius.circular(50),
+    //                       borderSide: BorderSide(color: Color.fromRGBO(62, 104, 255, 1), width: 1)
+    //                     ),
+    //                   ),
+    //               ),
+    //             ),
+            
+            
+    //     ],
+    //   ),
+    //   actions: [
+    //     isDesktop ?
+    //     Align(
+    //       alignment: Alignment.center,
+    //       child: Container(
+    //             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+    //             child: Row(
+    //               children: [
+    //                 Icon(Icons.date_range, color: Colors.black87, size: 18),
+    //                 SizedBox(width: 8),
+    //                 Text('${Jalali.now().year}/${Jalali.now().month}/${Jalali.now().day}', style: TextStyle(fontSize: 14, color: Colors.black87),),
+    //                 // Text(
+    //                 //   'شنبه، ۲۲ ژانویه ۲۰۲۲ ۱۹:۱۶',
+    //                 //   style: PersianFonts.Shabnam.copyWith(
+    //                 //     fontSize: 14,
+    //                 //     color: Colors.black54,
+    //                 //   ),
+    //                 // ),
+    //               ],
+    //             ),
+    //           ),
+    //     ) : SizedBox(),
+        
+    //     SizedBox(width: 8),
+    //     Padding(
+    //       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    //       child: Row(
+    //         children: [
+    //           Column(
+    //             mainAxisAlignment: MainAxisAlignment.center,
+    //             crossAxisAlignment: CrossAxisAlignment.end,
+    //             children: [
+    //               Text(
+    //                 UserSession.currentUser?.fullName ?? 'no name',
+                    
+    //                 style: PersianFonts.Shabnam.copyWith(
+    //                   fontSize: 14,
+    //                   fontWeight: FontWeight.bold,
+    //                   color: Colors.black87,
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //           SizedBox(width: 12),
+    //           CircleAvatar(
+    //             radius: 18,
+    //             backgroundColor: Colors.blue[100],
+    //             child: Icon(Icons.person, color: Colors.blue[700]),
+    //           ),
+    //           SizedBox(width: 4),
+    //           IconButton(
+    //             icon: Icon(Icons.keyboard_arrow_down),
+    //             onPressed: () {
+                  
+    //             },
+    //             color: Colors.black54,
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 
   Widget _buildSidebar() {
@@ -260,11 +449,11 @@ class OperatorMainLayout extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
         ),
-        textStyle: PersianFonts.Vazir.copyWith(
+        textStyle: PersianFonts.Shabnam.copyWith(
           color: Colors.black54,
           fontSize: 14,
         ),
-        selectedTextStyle: PersianFonts.Vazir.copyWith(
+        selectedTextStyle: PersianFonts.Shabnam.copyWith(
           color: Color(0xFF3E68FF),
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -380,7 +569,7 @@ class OperatorMainLayout extends StatelessWidget {
                       SizedBox(width: 20),
                       Text(
                         'راهنما',
-                        style: PersianFonts.Vazir.copyWith(
+                        style: PersianFonts.Shabnam.copyWith(
                           fontSize: 14,
                           color: Colors.black54,
                         ),
@@ -389,6 +578,20 @@ class OperatorMainLayout extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(onPressed: () {
+                  UserSession.clear();
+                  Get.to(LoginView());
+                }, 
+                icon: Icon(
+                  Icons.logout_outlined,
+                  color: Colors.red,
+                  size: 20,
+                  ),
+                ),
+              )
               // SizedBox(height: 16),
               // Container(
               //   width: double.infinity,
@@ -409,7 +612,7 @@ class OperatorMainLayout extends StatelessWidget {
               //         if (extended)
               //           Text(
               //             'بستن',
-              //             style: PersianFonts.Vazir.copyWith(fontSize: 14),
+              //             style: PersianFonts.Shabnam.copyWith(fontSize: 14),
               //           ),
               //       ],
               //     ),

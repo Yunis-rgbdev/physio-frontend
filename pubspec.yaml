@@ -36,6 +36,8 @@ dependencies:
   http: ^1.2.1
   sidebarx: ^0.17.2
   shamsi_date: ^1.1.1
+  persian_datetime_picker: ^2.6.0
+  dio: ^5.4.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

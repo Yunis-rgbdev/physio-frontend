@@ -1,85 +1,130 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:telewehab/pages/operator/operator_controllers/dashboard_controller.dart';
-import 'package:telewehab/utils/user_session.dart';
 import 'package:get/get.dart';
 
 class PatientsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final AppBarBlurController _appController = Get.put(AppBarBlurController());
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FA),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          children: [
-            Text('Patient List', style: TextStyle(color: Color(0xFF4A90E2))),
-            Icon(Icons.chevron_right, color: Colors.grey),
-            Text('Diane Cooper', style: TextStyle(color: Colors.black87)),
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (scroll) {
+          if (scroll.metrics.axis == Axis.vertical) {
+            _appController.updateScroll(scroll.metrics.pixels);
+          }
+          return false; // allow other listeners to receive it
+        },
+        child: CustomScrollView(
+          slivers: [
+            // AppBar built reactively with Obx
+            Obx(() {
+              final blur = _appController.blurValue;
+              final opacity = _appController.opacity;
+
+              return SliverAppBar(
+                pinned: true,
+                stretch: false,
+                elevation: 0,
+                backgroundColor: Colors.white.withOpacity(opacity),
+                // Use flexibleSpace to apply BackdropFilter blur and a vertical gradient overlay
+                flexibleSpace: ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+                    child: Container(
+                      // vertical gradient from solid white at top to slightly less opaque white below
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withOpacity(opacity),
+                            Colors.white.withOpacity((opacity * 0.85).clamp(0.0, 1.0)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                title: Row(
+                  children: const [
+                    Text('Patient List', style: TextStyle(color: Color(0xFF4A90E2))),
+                    SizedBox(width: 8),
+                    Icon(Icons.chevron_right, color: Colors.grey),
+                    SizedBox(width: 8),
+                    Text('Diane Cooper', style: TextStyle(color: Colors.black87)),
+                  ],
+                ),
+                actions: [
+                  IconButton(icon: const Icon(Icons.print, color: Colors.grey), onPressed: () {}),
+                  TextButton.icon(
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Edit Patient'),
+                    onPressed: () {},
+                  ),
+                ],
+                // control AppBar height if you want
+                expandedHeight: 0, // 0 makes it behave like a normal AppBar but pinned
+              );
+            }),
+
+            // Page content inside a single SliverToBoxAdapter
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (constraints.maxWidth < 900) {
+                      // Mobile layout
+                      return SingleChildScrollView(
+                        physics: const NeverScrollableScrollPhysics(), // outer CustomScrollView handles scroll
+                        child: Wrap(
+                          children: [
+                            PatientHeaderCard(),
+                            SizedBox(height: 16),
+                            AppointmentTabsSection(),
+                            SizedBox(height: 16),
+                            
+                            // NotesCard(),
+                            SizedBox(height: 16),
+                            FilesDocumentsCard(),
+                          ],
+                        ),
+                      );
+                    } else {
+                      // Desktop layout
+                      return Wrap(
+                        children: [
+                          // Use sized widgets inside wrap — keep structure similar to your original
+                          Column(
+                                children: [
+                                  PatientHeaderCard(),
+                                  SizedBox(height: 24),
+                                  AppointmentTabsSection(),
+                                ],
+                              ),
+                            
+                          
+                          Container(width: 1, color: const Color(0xFFE0E0E0)),
+                          Column(
+                                children: [
+                                  SizedBox(height: 24),
+                                  NotesCard(),
+                                  SizedBox(height: 24),
+                                  FilesDocumentsCard(),
+                                ],
+                              ),
+                            
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
           ],
         ),
-        actions: [
-          IconButton(icon: Icon(Icons.print, color: Colors.grey), onPressed: () {}),
-          TextButton.icon(
-            icon: Icon(Icons.edit),
-            label: Text('Edit Patient'),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth < 900) {
-            // Mobile layout
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  PatientHeaderCard(),
-                  SizedBox(height: 16),
-                  AppointmentTabsSection(),
-                  SizedBox(height: 16),
-                  NotesCard(),
-                  SizedBox(height: 16),
-                  FilesDocumentsCard(),
-                ],
-              ),
-            );
-          } else {
-            // Desktop layout
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 7,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        PatientHeaderCard(),
-                        SizedBox(height: 24),
-                        AppointmentTabsSection(),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(width: 1, color: Color(0xFFE0E0E0)),
-                Expanded(
-                  flex: 3,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        NotesCard(),
-                        SizedBox(height: 24),
-                        FilesDocumentsCard(),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-        },
       ),
     );
   }
@@ -194,17 +239,36 @@ class PatientHeaderCard extends StatelessWidget {
 
 // ========== PATIENT INFO GRID ==========
 class PatientInfoGrid extends StatelessWidget {
+  final DashboardController _dashboardController = Get.put(DashboardController());
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildInfoRow('Gender', '', 'Birthday', 'Feb 24th, 1997'),
-        _buildInfoRow('Phone Number', '(239) 555-0108', 'ZIP Code', '65649'),
-        _buildInfoRow('Street Address', 'Jl. Diponegoro No. 21', 'City', 'Cilocap'),
-        _buildInfoRow('Member Status', 'Active Member', 'Registered Date', 'Feb 24th, 1997'),
-      ],
-    );
+    return
+        Obx(
+                      () {
+                        if (_dashboardController.isLoading.value) {
+                          return const CircularProgressIndicator();
+                        } else if (_dashboardController.error.isNotEmpty) {
+                          return Text(
+                            _dashboardController.error.value,
+                            style: const TextStyle(color: Colors.red),
+                          );
+                        } else if (_dashboardController.patient.value != null) {
+                          final p = _dashboardController.patient.value!;
+                          
+                          return Column(
+                            children: [
+                              _buildInfoRow('Gender', p.gender.toString(), 'Birthday', p.birthDate.toString()),
+                              _buildInfoRow('Phone Number', p.phoneNumber.toString(), 'ZIP Code', '65649'),
+                              _buildInfoRow('National Code', p.nationalCode.toString(), 'City', 'Cilocap'),
+                              _buildInfoRow('Member Status', p.isActive.toString(), 'VAS Average', p.vasScore.toString())
+                            ],
+                          );
+                        } else {
+                          return const Text("No patient searched yet.");
+                        }
+                      } 
+                    );
   }
 
   Widget _buildInfoRow(String label1, String value1, String label2, String value2) {

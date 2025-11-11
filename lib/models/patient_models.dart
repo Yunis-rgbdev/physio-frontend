@@ -7,8 +7,9 @@ class Patient {
   final String? birthDate;
   final String? gender;
   final String? phoneNumber;
+  final bool? isActive;
   final double vasScore;
-  final String lastUpdate;
+  final String? lastUpdate;
 
   Patient({
     required this.id,
@@ -17,8 +18,9 @@ class Patient {
     this.birthDate,
     this.gender,
     this.phoneNumber,
+    this.isActive,
     required this.vasScore,
-    required this.lastUpdate,
+    this.lastUpdate,
   });
 
   factory Patient.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class Patient {
       fullName: json["full_name"],
       birthDate: json["birth_date"],
       gender: json["gender"],
+      isActive: json["is_active"],
       phoneNumber: json["phone_number"],
       vasScore: (json['vasScore'] ?? 0).toDouble(),
       lastUpdate: json['lastUpdate'] ?? '',

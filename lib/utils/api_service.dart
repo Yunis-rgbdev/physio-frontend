@@ -2,12 +2,15 @@ import 'dart:convert';
 // import 'package:flutter/material.dart';
 import 'package:telewehab/models/patient_models.dart';
 import 'package:http/http.dart' as http;
+import 'package:telewehab/models/daily_task_model.dart';
+import 'package:dio/dio.dart';
 
 class ApiService {
   static const String baseUrl = "http://127.0.0.1:8000/api";
+  final Dio _dio = Dio(); // ✅ Initialized immediately
 
   static Future<Map<String, dynamic>> login(String nationalCode, String password) async {
-    final url = Uri.parse('$baseUrl/login/');
+    final url = Uri.parse('$baseUrl/auth/login/');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -34,7 +37,7 @@ class ApiService {
     }
   }
 
-  static Future<List> getPatients() async {
+  static Future<List> getAllPatients() async {
     final url = Uri.parse('$baseUrl/patietns/');
     final response = await http.get(url, headers: {});
     if (response.statusCode == 200) {
@@ -54,6 +57,61 @@ class ApiService {
       throw Exception('Patient not found');
     } else {
       throw Exception('Failed to load patient');
+    }
+  }
+  Future<List<Patient>> getPatients(String operatorNationalCode) async {
+    try {
+      final response = await _dio.get(
+        '/patients/',
+        queryParameters: {'operator': operatorNationalCode},
+      );
+      return (response.data as List).map((p) => Patient.fromJson(p)).toList();
+    } catch (e) {
+      throw Exception('Failed to load patients: $e');
+    }
+  }
+
+  Future<List<DailyTask>> getDailyTasks(String patientNationalCode, String date) async {
+    try {
+      final response = await _dio.get(
+        '/daily-tasks/',
+        queryParameters: {
+          'patient': patientNationalCode,
+          'date': date,
+        },
+      );
+      return (response.data as List).map((t) => DailyTask.fromJson(t)).toList();
+    } catch (e) {
+      throw Exception('Failed to load tasks: $e');
+    }
+  }
+
+  Future<DailyTask> createTask(DailyTask task) async {
+    try {
+      final response = await _dio.post('/daily-tasks/', data: task.toJson());
+      return DailyTask.fromJson(response.data);
+    } catch (e) {
+      throw Exception('Failed to create task: $e');
+    }
+  }
+
+  Future<DailyTask> updateTask(DailyTask task) async {
+    try {
+      final response = await _dio.put(
+        '/daily-tasks/${task.id}/',
+        data: task.toJson(),
+      );
+      return DailyTask.fromJson(response.data);
+    } catch (e) {
+      throw Exception('Failed to update task: $e');
+    }
+  }
+
+  Future<void> deleteTask(int taskId) async {
+    try {
+      await _dio.delete('/daily-tasks/$taskId/');
+    } catch (e) {
+      throw Exception('Failed to delete task: $e');
     }
   }
 }

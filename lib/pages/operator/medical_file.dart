@@ -22,7 +22,7 @@ class MedicalFilePage extends StatelessWidget {
         child: Container(
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 222, 243, 255),
+            color: Colors.white
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
@@ -65,16 +65,19 @@ class MedicalFilePage extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
       child: Column(
         children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Text(
-                labelText,
-                style: PersianFonts.Shabnam.copyWith(color: Colors.black54, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.centerRight,
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(vertical: 4),
+          //     child: Text(
+          //       labelText,
+          //       style: PersianFonts.Shabnam.copyWith(
+          //         color: Colors.black54, 
+          //         fontWeight: FontWeight.bold
+          //       ),
+          //     ),
+          //   ),
+          // ),
           SizedBox(
             height: 40,
             child: TextFormField(
@@ -83,43 +86,35 @@ class MedicalFilePage extends StatelessWidget {
                 filled: true,
                 fillColor: Colors.white,
                 contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                // labelText: labelText,
-                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                labelText: labelText,
+                floatingLabelAlignment: FloatingLabelAlignment.start,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
                 floatingLabelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black54, fontWeight: FontWeight.bold),
                 labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black54, fontWeight: FontWeight.bold),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.white)
+                  borderRadius: BorderRadius.circular(0.0),
+                  borderSide: BorderSide(color: Colors.grey, width: 1)
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(0.0),
+                  borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
                 disabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(0.0),
+                  borderSide: BorderSide(color: Colors.grey, width: 1),
                 ),
                 errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.red),
+                  borderRadius: BorderRadius.circular(0.0),
+                  borderSide: BorderSide(color: Colors.red, width: 1),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(2.0),
-                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(0.0),
+                  borderSide: BorderSide(color: Color.fromRGBO(62, 104, 255, 1), width: 1),
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-  Widget _buildAppbar(double width) {
-    return Container(
-      width: width,
-      height: 150,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 13, 126, 218)
       ),
     );
   }

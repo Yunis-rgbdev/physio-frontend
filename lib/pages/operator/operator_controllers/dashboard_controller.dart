@@ -28,7 +28,7 @@ class DashboardController extends GetxController {
   RxString phoneNumber = ''.obs;
   RxString birthDate = ''.obs;
   RxString gender = ''.obs;
-  RxString Weight = ''.obs;
+  RxString weight = ''.obs;
   RxString height= ''.obs;
   RxString reason = ''.obs;
   RxString education = ''.obs;
@@ -156,4 +156,18 @@ class DashboardController extends GetxController {
       isLoading.value = false;
     }
   }
+}
+
+class AppBarBlurController extends GetxController {
+  final scrollOffset = 0.0.obs;
+
+  void updateScroll(double offset) {
+    scrollOffset.value = offset;
+  }
+
+  /// Blur strength grows from 0 to max 12 when scrolled 0..200 px
+  double get blurValue => (scrollOffset.value / 200 * 12).clamp(0.0, 12.0);
+
+  /// Opacity: 1.0 at top, then gradually lower (but not fully transparent)
+  double get opacity => (1.0 - (scrollOffset.value / 200)).clamp(0.6, 1.0);
 }
