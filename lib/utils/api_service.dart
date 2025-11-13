@@ -37,7 +37,7 @@ class ApiService {
     }
   }
 
-  static Future<List> getAllPatients() async {
+  static Future<List> getPatients() async {
     final url = Uri.parse('$baseUrl/patietns/');
     final response = await http.get(url, headers: {});
     if (response.statusCode == 200) {
@@ -59,7 +59,7 @@ class ApiService {
       throw Exception('Failed to load patient');
     }
   }
-  Future<List<Patient>> getPatients(String operatorNationalCode) async {
+  Future<List<Patient>> getAllPatients(String operatorNationalCode) async {
     try {
       final response = await _dio.get(
         '/patients/',

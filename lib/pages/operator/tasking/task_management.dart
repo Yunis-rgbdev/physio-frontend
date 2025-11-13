@@ -1,38 +1,39 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:persian_fonts/persian_fonts.dart';
 import 'package:shamsi_date/shamsi_date.dart' as shamsi;
-import 'package:persian_datetime_picker/persian_datetime_picker.dart' as picker;
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'task_controller.dart';
+import 'package:telewehab/pages/operator/operator_controllers/dashboard_controller.dart';
+import 'package:telewehab/utils/user_session.dart';
 import 'package:telewehab/models/daily_task_model.dart';
 import 'package:telewehab/models/patient_models.dart';
 import 'package:telewehab/utils/api_service.dart';
 
 
-class PhysioTasksPage extends StatelessWidget {
-  // final String operatorNationalCode;
 
-  // const PhysioTasksPage({
-  //   Key? key,
-  //   required this.operatorNationalCode,
-  // }) : super(key: key);
+
+
+class PhysioTasksPage extends StatelessWidget {
+  final _key = GlobalKey<ScaffoldState>();
+
+  PhysioTasksPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Initialize controller
+    // Initialize controllers
+    final AppBarBlurController _appController = Get.put(AppBarBlurController());
     final controller = Get.put(
-  PhysioTasksController(
-    operatorNationalCode: '1234567890', // 👈 replace with real operator code
-    apiService: ApiService(),
-  ),
-
+      PhysioTasksController(
+        operatorNationalCode: UserSession.currentUser?.nationalCode ?? '',
+        apiService: ApiService(),
+      ),
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('مدیریت تمرینات بیماران'),
-        centerTitle: true,
-        backgroundColor: Colors.teal,
-      ),
+      key: _key,
+      appBar: _buildAppBar(context, _appController),
       body: Obx(() {
         if (controller.isLoading.value && controller.patients.isEmpty) {
           return const Center(child: CircularProgressIndicator());
@@ -54,6 +55,50 @@ class PhysioTasksPage extends StatelessWidget {
     );
   }
 
+  PreferredSizeWidget _buildAppBar(BuildContext context, AppBarBlurController _appController) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight),
+      child: Obx(() {
+        final blur = _appController.blurValue;
+        final opacity = _appController.opacity;
+
+        return AppBar(
+          backgroundColor: Colors.white.withOpacity(opacity),
+          elevation: 0,
+          leading: MediaQuery.of(context).size.width < 1024
+              ? IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.black87),
+                  onPressed: () => _key.currentState?.openDrawer(),
+                )
+              : null,
+          automaticallyImplyLeading: MediaQuery.of(context).size.width < 1024,
+          title: Text(
+            'مدیریت تمرینات بیماران',
+            style: PersianFonts.Shabnam.copyWith(),
+          ),
+          centerTitle: true,
+          flexibleSpace: ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withOpacity(opacity),
+                      Colors.white.withOpacity((opacity * 0.85).clamp(0.0, 1.0)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
   void _showAddTaskDialog(BuildContext context, PhysioTasksController controller) {
     if (controller.selectedPatient.value == null) {
       Get.snackbar('خطا', 'ابتدا یک بیمار انتخاب کنید');
@@ -63,8 +108,6 @@ class PhysioTasksPage extends StatelessWidget {
     Get.dialog(
       _TaskDialog(
         controller: controller,
-        // patientNationalCode: controller.selectedPatient.value!.nationalCode,
-        // operatorNationalCode: operatorNationalCode,
         date: controller.dateForApi,
       ),
     );
@@ -75,8 +118,9 @@ class PhysioTasksPage extends StatelessWidget {
 
 class _DateSelector extends StatelessWidget {
   final PhysioTasksController controller;
+  String? selectedDate; // store formatted date
 
-  const _DateSelector({required this.controller});
+  _DateSelector({required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -93,14 +137,24 @@ class _DateSelector extends StatelessWidget {
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: const Icon(Icons.chevron_right),
-            onPressed: controller.previousDay,
+            icon: const Icon(Icons.arrow_back_ios_rounded),
+            onPressed: controller.nextDay,
           ),
+          const SizedBox(width: 32.0,),
+          
           InkWell(
-            onTap: () {},
+            onTap: () async {
+              final picked = await controller.pickPersianDate(context);
+              if (picked != null) {
+              // Convert picked string back to Jalali if needed
+              // Since your pickPersianDate returns a Jalali, you can directly assign
+              controller.selectedDate.value = picked;
+              }
+
+            },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
@@ -113,7 +167,7 @@ class _DateSelector extends StatelessWidget {
                   const Icon(Icons.calendar_today, color: Colors.teal, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    controller.persianDate,
+                    selectedDate ?? controller.persianDate, // ✅ ternary operator
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -123,27 +177,31 @@ class _DateSelector extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.chevron_left),
-            onPressed: controller.nextDay,
+          const SizedBox(width: 32.0,),
+          Align(
+            alignment: Alignment.center,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_forward_ios_rounded),
+              onPressed: controller.previousDay,
+            ),
           ),
         ],
       ),
     ));
   }
 
-  Future<void> _showDatePicker(BuildContext context) async {
-final selectedDate = shamsi.Jalali.now().obs;
+//   Future<void> _showDatePicker(BuildContext context) async {
+// final selectedDate = shamsi.Jalali.now().obs;
 
-    final picked = await picker.showPersianDatePicker(
-  context: context,
-  initialDate: picker.Jalali.fromDateTime(selectedDate.value.toDateTime()),
-  firstDate: picker.Jalali(1400, 1),
-  lastDate: picker.Jalali(1410, 12),
-);
+//     final picked = await picker.showPersianDatePicker(
+//   context: context,
+//   initialDate: picker.Jalali.fromDateTime(selectedDate.value.toDateTime()),
+//   firstDate: picker.Jalali(1400, 1),
+//   lastDate: picker.Jalali(1410, 12),
+// );
 
-    if (picked != null) controller.changeDate(picked);
-  }
+//     if (picked != null) controller.changeDate(picked);
+//   }
 }
 
 // ==================== PATIENT SELECTOR ====================
@@ -514,8 +572,8 @@ class _TaskDialog extends StatelessWidget {
 
     final task = DailyTask(
       id: existingTask?.id,
-      patientNationalCode: patientNationalCode,
-      operatorNationalCode: operatorNationalCode,
+      patientNationalCode: controller.patientNationalCode.text,
+      operatorNationalCode: controller.operatorNationalCode,
       date: date,
       title: titleController.text,
       description: descriptionController.text,
@@ -530,3 +588,5 @@ class _TaskDialog extends StatelessWidget {
     }
   }
 }
+
+

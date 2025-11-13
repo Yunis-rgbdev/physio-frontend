@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:telewehab/utils/api_service.dart';
 import 'package:telewehab/models/patient_models.dart';
 import 'package:telewehab/models/daily_task_model.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 
 class PhysioTasksController extends GetxController {
+  TextEditingController patientNationalCode = TextEditingController();
   final String operatorNationalCode;
   final ApiService apiService;
 
@@ -43,7 +45,7 @@ class PhysioTasksController extends GetxController {
   Future<void> loadPatients() async {
     try {
       isLoading.value = true;
-      final result = await apiService.getPatients(operatorNationalCode);
+      final result = await ApiService().getAllPatients(operatorNationalCode);
       patients.value = result;
       if (result.isNotEmpty) {
         selectedPatient.value = result[0];
@@ -169,5 +171,19 @@ class PhysioTasksController extends GetxController {
   void changeDate(Jalali newDate) {
   selectedDate.value = newDate;
   loadTasks();
+  }
+
+  Future<Jalali?> pickPersianDate(BuildContext context) async {
+  Jalali? picked = await showPersianDatePicker(
+    context: context,
+    initialDate: Jalali.now(),
+    firstDate: Jalali(1385, 8),
+    lastDate: Jalali(1450, 9),
+    holidayConfig: PersianHolidayConfig(weekendDays: {7}),
+    initialEntryMode: PersianDatePickerEntryMode.calendarOnly,
+    initialDatePickerMode: PersianDatePickerMode.year,
+  );
+
+  return picked; // return Jalali directly
 }
 }
