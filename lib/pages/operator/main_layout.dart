@@ -149,7 +149,7 @@ class OperatorMainLayout extends StatelessWidget {
                         decoration: InputDecoration(
                           // labelText: 'جستجو',
                           constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 250 : 170),
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
                           floatingLabelStyle: PersianFonts.Shabnam.copyWith(
                             color: Color.fromRGBO(62, 104, 255, 1), 
                             fontWeight: FontWeight.bold, 
@@ -159,13 +159,17 @@ class OperatorMainLayout extends StatelessWidget {
                           hintStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26, fontSize: 16),
                           labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26),
                           contentPadding: EdgeInsets.symmetric( horizontal: 16, vertical: 16),
-                          suffix: IconButton(
-                            padding: EdgeInsets.all(8),
+                          suffixIcon: IconButton(
+                            padding: EdgeInsets.zero, // ensures correct alignment
+                            icon: Icon(Icons.search, size: 24),
                             onPressed: () {
-                              _dcontroller.searchPatient(_dcontroller.nationalCodeController.text);
-                            }, 
-                            icon: Icon(Icons.search, size: 20,),
+                              _dcontroller.searchPatient(
+                              _dcontroller.nationalCodeController.text,
+                              );
+                            },
                           ),
+
+                          
                           suffixIconColor: Colors.black26,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
                           focusedErrorBorder: OutlineInputBorder(

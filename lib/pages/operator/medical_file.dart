@@ -15,6 +15,12 @@ class MedicalFilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final DashboardController _controller = Get.find<DashboardController>();
     final width = MediaQuery.of(context).size.width;
+    bool isDesktop;
+    if (width > 720) {
+      isDesktop = true;
+    } else {
+      isDesktop = false;
+    }
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SingleChildScrollView(
@@ -26,13 +32,12 @@ class MedicalFilePage extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
-            child: Wrap(
+            child: isDesktop ? Wrap(
               alignment: WrapAlignment.spaceEvenly,
 
               children: [
                 // _buildAppbar(width),
                 Row(
-
                   children: [
                     Flexible(flex: 7, child: _buildInputItem('Full Name', _controller.FullNameController)),
                     Flexible(flex: 3, child: _buildInputItem('Gender', _controller.GenderController)),
@@ -52,7 +57,24 @@ class MedicalFilePage extends StatelessWidget {
                 _buildInputItem('Helper Tool', _controller.HelperToolController),
                 _buildInputItem('Address', _controller.AddressController),
               ],
-            ),
+            ) : Wrap(
+              children: [
+                _buildInputItem('Full Name', _controller.FullNameController),
+                _buildInputItem('Gender', _controller.GenderController),
+                _buildInputItem('Age', _controller.BirthDateController),
+                _buildInputItem('Weight', _controller.WeightController),
+                _buildInputItem('Height', _controller.HeightController),
+                _buildInputItem('Reason', _controller.ReasonController),
+                _buildInputItem('Education', _controller.EducationController),
+                _buildInputItem('Relationship', _controller.RelationshipController),
+                _buildInputItem('Children', _controller.ChildrenCountController),
+                _buildInputItem('Doctor Name', _controller.DoctorNameController),
+                _buildInputItem('Therapist Name', _controller.TherapistNameController),
+                _buildInputItem('Appointment Date', _controller.AppointmentDateController),
+                _buildInputItem('Helper Tool', _controller.HelperToolController),
+                _buildInputItem('Address', _controller.AddressController),
+              ],
+            )
           ),
         ),
       ),

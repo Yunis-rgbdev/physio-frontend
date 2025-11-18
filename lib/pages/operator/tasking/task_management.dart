@@ -55,6 +55,22 @@ class PhysioTasksPage extends StatelessWidget {
     );
   }
 
+  PreferredSizeWidget _buildDateBar(BuildContext context, AppBarBlurController _appController) {
+    return PreferredSize(
+      preferredSize:const Size.fromHeight(kToolbarHeight) ,
+      child: Obx(() {
+        final blur = _appController.blurValue;
+        final opacity = _appController.opacity;
+
+        return AppBar(
+          backgroundColor: Colors.white.withOpacity(opacity),
+          elevation: 0,
+          automaticallyImplyLeading: false,
+        );
+      }),
+    );
+  }
+
   PreferredSizeWidget _buildAppBar(BuildContext context, AppBarBlurController _appController) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -65,13 +81,14 @@ class PhysioTasksPage extends StatelessWidget {
         return AppBar(
           backgroundColor: Colors.white.withOpacity(opacity),
           elevation: 0,
-          leading: MediaQuery.of(context).size.width < 1024
-              ? IconButton(
-                  icon: const Icon(Icons.menu, color: Colors.black87),
-                  onPressed: () => _key.currentState?.openDrawer(),
-                )
-              : null,
-          automaticallyImplyLeading: MediaQuery.of(context).size.width < 1024,
+          automaticallyImplyLeading: false,
+          // leading: MediaQuery.of(context).size.width < 1024
+          //     ? IconButton(
+          //         icon: const Icon(Icons.menu, color: Colors.black87),
+          //         onPressed: () => _key.currentState?.openDrawer(),
+          //       )
+          //     : null,
+          // automaticallyImplyLeading: MediaQuery.of(context).size.width < 1024,
           title: Text(
             'مدیریت تمرینات بیماران',
             style: PersianFonts.Shabnam.copyWith(),
@@ -97,6 +114,8 @@ class PhysioTasksPage extends StatelessWidget {
         );
       }),
     );
+
+    
   }
 
   void _showAddTaskDialog(BuildContext context, PhysioTasksController controller) {
