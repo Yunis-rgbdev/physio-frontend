@@ -147,8 +147,8 @@ class OperatorMainLayout extends StatelessWidget {
                         // validator: loginController.validateNationalCode,
                         controller: _dcontroller.nationalCodeController,
                         decoration: InputDecoration(
-                          // labelText: 'جستجو',
-                          constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 250 : 170),
+                          // labelText: 'جستجو'
+                          constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 290 : 170),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           floatingLabelStyle: PersianFonts.Shabnam.copyWith(
                             color: Color.fromRGBO(62, 104, 255, 1), 

@@ -49,27 +49,27 @@ class PhysioTasksPage extends StatelessWidget {
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddTaskDialog(context, controller),
-        backgroundColor: Colors.teal,
-        child: const Icon(Icons.add),
+        backgroundColor: Colors.black,
+        child: const Icon(Icons.add, color: Colors.white,),
       ),
     );
   }
 
-  PreferredSizeWidget _buildDateBar(BuildContext context, AppBarBlurController _appController) {
-    return PreferredSize(
-      preferredSize:const Size.fromHeight(kToolbarHeight) ,
-      child: Obx(() {
-        final blur = _appController.blurValue;
-        final opacity = _appController.opacity;
+  // PreferredSizeWidget _buildDateBar(BuildContext context, AppBarBlurController _appController) {
+  //   return PreferredSize(
+  //     preferredSize:const Size.fromHeight(kToolbarHeight) ,
+  //     child: Obx(() {
+  //       final blur = _appController.blurValue;
+  //       final opacity = _appController.opacity;
 
-        return AppBar(
-          backgroundColor: Colors.white.withOpacity(opacity),
-          elevation: 0,
-          automaticallyImplyLeading: false,
-        );
-      }),
-    );
-  }
+  //       return AppBar(
+  //         backgroundColor: Colors.white.withOpacity(opacity),
+  //         elevation: 0,
+  //         automaticallyImplyLeading: false,
+  //       );
+  //     }),
+  //   );
+  // }
 
   PreferredSizeWidget _buildAppBar(BuildContext context, AppBarBlurController _appController) {
     return PreferredSize(
@@ -227,16 +227,88 @@ class _DateSelector extends StatelessWidget {
 
 class _PatientSelector extends StatelessWidget {
   final PhysioTasksController controller;
+  
 
   const _PatientSelector({required this.controller});
-
+  
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    bool isDesktop;
+    if (width > 720) {
+      isDesktop = true;
+    } else {
+      isDesktop = false;
+    }
+
     return Obx(() {
       if (controller.patients.isEmpty) {
-        return const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text('هیچ بیماری یافت نشد'),
+        return Column(
+          children: [
+            const SizedBox(height: 12,),
+            
+            
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              child: TextFormField(
+                        // onChanged: (value) => loginController.nationalCode.value = value,
+                        // validator: loginController.validateNationalCode,
+                        // controller: _dcontroller.nationalCodeController,
+                        decoration: InputDecoration(
+                          // labelText: 'جستجو'
+                          constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 290 : 170),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          floatingLabelStyle: PersianFonts.Shabnam.copyWith(
+                            color: Color.fromRGBO(62, 104, 255, 1), 
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 18,
+                          ),
+                          hintText: 'جستجوی بیمار',
+                          hintStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26, fontSize: 16),
+                          labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26),
+                          contentPadding: EdgeInsets.symmetric( horizontal: 16, vertical: 16),
+                          suffixIcon: IconButton(
+                            padding: EdgeInsets.zero, // ensures correct alignment
+                            icon: Icon(Icons.search, size: 24),
+                            onPressed: () {
+                              // _dcontroller.searchPatient(
+                              // _dcontroller.nationalCodeController.text,
+                              // );
+                            },
+                          ),
+
+                          
+                          suffixIconColor: Colors.black26,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
+                          focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Colors.red, width: 1)
+                          
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32),
+                          borderSide: BorderSide(
+                            color: Colors.black12,
+                            width: 1.5,
+                          ),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Colors.red, width: 1)
+                        ),
+                        errorStyle: PersianFonts.Shabnam.copyWith(),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide(color: Color.fromRGBO(62, 104, 255, 1), width: 1)
+                        ),
+                      ),
+                  ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('هیچ بیماری یافت نشد', style: PersianFonts.Shabnam.copyWith(fontSize: 18)),
+            ),
+          ],
         );
       }
 
