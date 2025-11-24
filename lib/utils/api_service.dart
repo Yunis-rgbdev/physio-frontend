@@ -37,6 +37,16 @@ class ApiService {
     }
   }
 
+  Future<List> getPatientsByOperator(String operatorNationalCode) async {
+    final url = Uri.parse('$baseUrl/odpatients/?national_code=$operatorNationalCode');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load profile');
+    }
+  }
+
   static Future<List> getPatients() async {
     final url = Uri.parse('$baseUrl/patietns/');
     final response = await http.get(url, headers: {});
