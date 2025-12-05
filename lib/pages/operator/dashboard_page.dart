@@ -26,7 +26,7 @@ class DashboardPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'نظارت بر بیماران VAS',
+                    'نظارت بر بیماران',
                     style: PersianFonts.Shabnam.copyWith(
                       color: Colors.black87,
                       fontSize: 24,
@@ -97,13 +97,13 @@ class DashboardPage extends StatelessWidget {
                         const SizedBox(height: 16),
                         Text(
                           controller.errorMessage.value,
-                          style: const TextStyle(color: Colors.red),
+                          style: PersianFonts.Shabnam.copyWith(color: Colors.red),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => controller.refreshData(),
-                          child: const Text('تلاش مجدد'),
+                          child: const Text('تلاش مجدد', style: PersianFonts.Shabnam,),
                         ),
                       ],
                     ),
@@ -119,7 +119,7 @@ class DashboardPage extends StatelessWidget {
                         const SizedBox(height: 16),
                         Text(
                           'هیچ بیمار فعالی یافت نشد',
-                          style: TextStyle(
+                          style: PersianFonts.Shabnam.copyWith(
                             fontSize: 16,
                             color: Colors.grey[600],
                           ),
@@ -285,7 +285,7 @@ class PatientVASCard extends StatelessWidget {
                   children: [
                     Text(
                       patientWithVAS.vasScore.toString(),
-                      style: TextStyle(
+                      style: PersianFonts.Shabnam.copyWith(
                         color: vasColor,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -293,7 +293,7 @@ class PatientVASCard extends StatelessWidget {
                     ),
                     Text(
                       vasLevel,
-                      style: TextStyle(
+                      style: PersianFonts.Shabnam.copyWith(
                         color: vasColor.withOpacity(0.8),
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
@@ -311,7 +311,7 @@ class PatientVASCard extends StatelessWidget {
                 children: [
                   Text(
                     patientWithVAS.patientName ?? 'بیمار ${patientWithVAS.patientNationalCode}',
-                    style: const TextStyle(
+                    style: PersianFonts.Shabnam.copyWith(
                       color: Colors.black87,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -332,7 +332,7 @@ class PatientVASCard extends StatelessWidget {
                           ),
                           child: Text(
                             'تاریخ تولد: ${patientWithVAS.birthDate}',
-                            style: const TextStyle(
+                            style: PersianFonts.Shabnam.copyWith(
                               color: Color(0xFF64B5F6),
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -351,7 +351,7 @@ class PatientVASCard extends StatelessWidget {
                         ),
                         child: Text(
                           'کد ملی: ${patientWithVAS.patientNationalCode}',
-                          style: const TextStyle(
+                          style: PersianFonts.Shabnam.copyWith(
                             color: Colors.black54,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -371,7 +371,7 @@ class PatientVASCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         'شروع: ${patientWithVAS.startDate}',
-                        style: const TextStyle(
+                        style: PersianFonts.Shabnam.copyWith(
                           color: Colors.black54,
                           fontSize: 12,
                         ),
