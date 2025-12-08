@@ -1,15 +1,19 @@
 import 'package:get/get.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:flutter/material.dart';
+import 'package:telewehab/models/patient_models.dart';
 import 'package:telewehab/utils/api_service.dart';
 import 'package:telewehab/models/patient_models.dart';
 import 'package:telewehab/models/daily_task_model.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 
 class PhysioTasksController extends GetxController {
-  TextEditingController patientNationalCode = TextEditingController();
+  TextEditingController patientNationalCodeController = TextEditingController();
+  RxString patientNatioanlCode = ''.obs;
+  var patient = Rxn<Patient>();
   final String operatorNationalCode;
   final ApiService apiService;
+  var error = ''.obs;
 
   PhysioTasksController({
     required this.operatorNationalCode,
@@ -26,6 +30,22 @@ class PhysioTasksController extends GetxController {
   void onInit() {
     super.onInit();
     loadPatients();
+  }
+
+  Future<void> search_p() async {
+    isLoading.value = true;
+    error.value = '';
+    patient.value = null;
+
+    try {
+      final result = await ApiService().searchPatient(patientNatioanlCode.trim());
+      patient.value = result;
+    } catch (e) {
+      error.value = e.toString();
+    } finally {
+      isLoading.value = false;
+    }
+  
   }
 
   String get formattedDate {

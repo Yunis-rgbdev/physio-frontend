@@ -41,7 +41,7 @@ class DashboardController extends GetxController {
   RxString address = ''.obs;
 
   var patients = <Patient>[].obs;
-  var patient = Rxn<Patient>(); // Rxn means nullable reactive variable
+  var patient = Rxn<Patient>();
   var isLoading = false.obs;
   var error = ''.obs;
 

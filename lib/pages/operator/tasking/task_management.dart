@@ -146,7 +146,7 @@ class _DateSelector extends StatelessWidget {
     return Obx(() => Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.teal.shade50,
+        color: Colors.transparent,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
@@ -240,20 +240,139 @@ class _PatientSelector extends StatelessWidget {
     } else {
       isDesktop = false;
     }
+    
 
     return Obx(() {
       if (controller.patients.isEmpty) {
         return Column(
           children: [
-            const SizedBox(height: 12,),
+            // const SizedBox(height: 12,),
             
             
-            Padding(
+            // Padding(
+            //   padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            //   child: TextFormField(
+            //             // onChanged: (value) => loginController.nationalCode.value = value,
+            //             // validator: loginController.validateNationalCode,
+            //             controller: controller.patientNationalCodeController,
+            //             decoration: InputDecoration(
+            //               // labelText: 'جستجو'
+            //               constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 290 : 170),
+            //               floatingLabelBehavior: FloatingLabelBehavior.always,
+            //               floatingLabelStyle: PersianFonts.Shabnam.copyWith(
+            //                 color: Color.fromRGBO(62, 104, 255, 1), 
+            //                 fontWeight: FontWeight.bold, 
+            //                 fontSize: 18,
+            //               ),
+            //               hintText: 'جستجوی بیمار',
+            //               hintStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26, fontSize: 16),
+            //               labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26),
+            //               contentPadding: EdgeInsets.symmetric( horizontal: 16, vertical: 16),
+            //               suffixIcon: IconButton(
+            //                 padding: EdgeInsets.zero, // ensures correct alignment
+            //                 icon: Icon(Icons.search, size: 24),
+            //                 onPressed: () {
+            //                   // _dcontroller.searchPatient(
+            //                   // _dcontroller.nationalCodeController.text,
+            //                   // );
+            //                 },
+            //               ),
+
+                          
+            //               suffixIconColor: Colors.black26,
+            //               border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
+            //               focusedErrorBorder: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(50),
+            //               borderSide: BorderSide(color: Colors.red, width: 1)
+                          
+            //             ),
+            //             enabledBorder: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(32),
+            //               borderSide: BorderSide(
+            //                 color: Colors.black12,
+            //                 width: 1.5,
+            //               ),
+            //             ),
+            //             errorBorder: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(50),
+            //               borderSide: BorderSide(color: Colors.red, width: 1)
+            //             ),
+            //             errorStyle: PersianFonts.Shabnam.copyWith(),
+            //             focusedBorder: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(50),
+            //               borderSide: BorderSide(color: Color.fromRGBO(62, 104, 255, 1), width: 1)
+            //             ),
+            //           ),
+            //       ),
+            // ),
+            // Padding(
+            //   padding: EdgeInsets.all(16),
+            //   child: Text('هیچ بیماری یافت نشد', style: PersianFonts.Shabnam.copyWith(fontSize: 18)),
+            // ),
+          ],
+        );
+      }
+
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: DropdownButtonFormField<Patient>(
+          value: controller.selectedPatient.value,
+          decoration: InputDecoration(
+            labelText: 'انتخاب بیمار',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            prefixIcon: const Icon(Icons.person),
+          ),
+          items: controller.patients.map((patient) {
+            return DropdownMenuItem(
+              value: patient,
+              child: Text('${patient.fullName ?? "نام نامشخص"} - ${patient.nationalCode}'),
+            );
+          }).toList(),
+          onChanged: (patient) {
+            if (patient != null) {
+              controller.selectPatient(patient);
+            }
+          },
+        ),
+      );
+    });
+  }
+}
+
+// ==================== TASKS LIST ====================
+
+class _TasksList extends StatelessWidget {
+  final PhysioTasksController controller;
+
+  const _TasksList({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    bool isDesktop;
+    if (width > 720) {
+      isDesktop = true;
+    } else {
+      isDesktop = false;
+    }
+    return Obx(() {
+      if (controller.tasks.isEmpty) {
+        return Center(
+          child: 
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Icon(Icons.fitness_center, size: 64, color: Colors.grey),
+              // SizedBox(height: 16),
+              // Text('هیچ تمرینی برای این روز ثبت نشده است'),
+              Padding(
               padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               child: TextFormField(
                         // onChanged: (value) => loginController.nationalCode.value = value,
                         // validator: loginController.validateNationalCode,
-                        // controller: _dcontroller.nationalCodeController,
+                        controller: controller.patientNationalCodeController,
                         decoration: InputDecoration(
                           // labelText: 'جستجو'
                           constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 290 : 170),
@@ -308,56 +427,6 @@ class _PatientSelector extends StatelessWidget {
               padding: EdgeInsets.all(16),
               child: Text('هیچ بیماری یافت نشد', style: PersianFonts.Shabnam.copyWith(fontSize: 18)),
             ),
-          ],
-        );
-      }
-
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: DropdownButtonFormField<Patient>(
-          value: controller.selectedPatient.value,
-          decoration: InputDecoration(
-            labelText: 'انتخاب بیمار',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            prefixIcon: const Icon(Icons.person),
-          ),
-          items: controller.patients.map((patient) {
-            return DropdownMenuItem(
-              value: patient,
-              child: Text('${patient.fullName ?? "نام نامشخص"} - ${patient.nationalCode}'),
-            );
-          }).toList(),
-          onChanged: (patient) {
-            if (patient != null) {
-              controller.selectPatient(patient);
-            }
-          },
-        ),
-      );
-    });
-  }
-}
-
-// ==================== TASKS LIST ====================
-
-class _TasksList extends StatelessWidget {
-  final PhysioTasksController controller;
-
-  const _TasksList({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      if (controller.tasks.isEmpty) {
-        return const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.fitness_center, size: 64, color: Colors.grey),
-              SizedBox(height: 16),
-              Text('هیچ تمرینی برای این روز ثبت نشده است'),
             ],
           ),
         );
@@ -663,7 +732,7 @@ class _TaskDialog extends StatelessWidget {
 
     final task = DailyTask(
       id: existingTask?.id,
-      patientNationalCode: controller.patientNationalCode.text,
+      patientNationalCode: controller.patientNationalCodeController.text,
       operatorNationalCode: controller.operatorNationalCode,
       date: date,
       title: titleController.text,

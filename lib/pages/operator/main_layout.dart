@@ -247,14 +247,14 @@ class OperatorMainLayout extends StatelessWidget {
                 backgroundColor: Colors.blue[100],
                 child: Icon(Icons.person, color: Colors.blue[700]),
               ),
-              SizedBox(width: 4),
-              IconButton(
-                icon: Icon(Icons.keyboard_arrow_down),
-                onPressed: () {
+              // SizedBox(width: 4),
+              // IconButton(
+              //   icon: Icon(Icons.keyboard_arrow_down),
+              //   onPressed: () {
                   
-                },
-                color: Colors.black54,
-              ),
+              //   },
+              //   color: Colors.black54,
+              // ),
             ],
           ),
         ),
