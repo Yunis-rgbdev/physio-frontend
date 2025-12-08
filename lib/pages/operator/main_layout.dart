@@ -279,169 +279,6 @@ class OperatorMainLayout extends StatelessWidget {
       );
     }),
   );
-    // AppBar(
-    //   backgroundColor: Colors.white,
-    //   elevation: 0,
-    //   leading: MediaQuery.of(context).size.width < 1024
-    //       ? IconButton(
-    //           icon: Icon(Icons.menu, color: Colors.black87),
-    //           onPressed: () => _key.currentState?.openDrawer(),
-    //         )
-    //       : null,
-    //   automaticallyImplyLeading: MediaQuery.of(context).size.width < 1024,
-    //   title: Row(
-    //     children: [
-    //       if (MediaQuery.of(context).size.width >= 1024)
-    //         Container(
-    //       padding: EdgeInsets.all(16),
-    //       child: Row(
-    //         children: [
-    //           Container(
-    //             padding: EdgeInsets.all(8),
-    //             decoration: BoxDecoration(
-    //               color: Color(0xFF3E68FF),
-    //               borderRadius: BorderRadius.circular(8),
-    //             ),
-    //             child: Icon(
-    //               Icons.local_hospital,
-    //               color: Colors.white,
-    //               size: 24,
-    //             ),
-    //           ),
-    //           if (isDesktop) ...[
-    //             SizedBox(width: 12),
-    //             Text(
-    //               'SCAIL HEALTH',
-    //               style: TextStyle(
-    //                 fontSize: 16,
-    //                 fontWeight: FontWeight.bold,
-    //                 color: Colors.black87,
-    //                 letterSpacing: 1.2,
-    //               ),
-    //             ),
-    //           ],
-    //         ],
-    //       ),
-    //     ),
-    //     const SizedBox(width: 18.0),
-    //     SizedBox(
-    //               // height: 65,
-    //               // width: isDesktop ? 200 : 100,
-    //                 child: TextFormField(
-    //                     // onChanged: (value) => loginController.nationalCode.value = value,
-    //                     // validator: loginController.validateNationalCode,
-    //                     controller: _dcontroller.nationalCodeController,
-    //                     decoration: InputDecoration(
-    //                       // labelText: 'جستجو',
-    //                       constraints: BoxConstraints.expand(height: isDesktop ? 40 : 40, width: isDesktop ? 250 : 170),
-    //                       floatingLabelBehavior: FloatingLabelBehavior.never,
-    //                       floatingLabelStyle: PersianFonts.Shabnam.copyWith(
-    //                         color: Color.fromRGBO(62, 104, 255, 1), 
-    //                         fontWeight: FontWeight.bold, 
-    //                         fontSize: 18,
-    //                       ),
-    //                       hintText: 'جستجو',
-    //                       hintStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26, fontSize: 16),
-    //                       labelStyle: PersianFonts.Shabnam.copyWith(color: Colors.black26),
-    //                       contentPadding: EdgeInsets.symmetric( horizontal: 16),
-    //                       suffix: IconButton(
-    //                         onPressed: () {
-    //                           _dcontroller.searchPatient(_dcontroller.nationalCodeController.text);
-    //                         }, 
-    //                         icon: Icon(Icons.search),
-    //                       ),
-    //                       suffixIconColor: Colors.black26,
-    //                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(50)),
-    //                       focusedErrorBorder: OutlineInputBorder(
-    //                       borderRadius: BorderRadius.circular(50),
-    //                       borderSide: BorderSide(color: Colors.red, width: 1)
-                          
-    //                     ),
-    //                     enabledBorder: OutlineInputBorder(
-    //                       borderRadius: BorderRadius.circular(32),
-    //                       borderSide: BorderSide(
-    //                         color: Colors.black12,
-    //                         width: 1.5,
-    //                       ),
-    //                     ),
-    //                     errorBorder: OutlineInputBorder(
-    //                       borderRadius: BorderRadius.circular(50),
-    //                       borderSide: BorderSide(color: Colors.red, width: 1)
-    //                     ),
-    //                     errorStyle: PersianFonts.Shabnam.copyWith(),
-    //                     focusedBorder: OutlineInputBorder(
-    //                       borderRadius: BorderRadius.circular(50),
-    //                       borderSide: BorderSide(color: Color.fromRGBO(62, 104, 255, 1), width: 1)
-    //                     ),
-    //                   ),
-    //               ),
-    //             ),
-            
-            
-    //     ],
-    //   ),
-    //   actions: [
-    //     isDesktop ?
-    //     Align(
-    //       alignment: Alignment.center,
-    //       child: Container(
-    //             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-    //             child: Row(
-    //               children: [
-    //                 Icon(Icons.date_range, color: Colors.black87, size: 18),
-    //                 SizedBox(width: 8),
-    //                 Text('${Jalali.now().year}/${Jalali.now().month}/${Jalali.now().day}', style: TextStyle(fontSize: 14, color: Colors.black87),),
-    //                 // Text(
-    //                 //   'شنبه، ۲۲ ژانویه ۲۰۲۲ ۱۹:۱۶',
-    //                 //   style: PersianFonts.Shabnam.copyWith(
-    //                 //     fontSize: 14,
-    //                 //     color: Colors.black54,
-    //                 //   ),
-    //                 // ),
-    //               ],
-    //             ),
-    //           ),
-    //     ) : SizedBox(),
-        
-    //     SizedBox(width: 8),
-    //     Padding(
-    //       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    //       child: Row(
-    //         children: [
-    //           Column(
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             crossAxisAlignment: CrossAxisAlignment.end,
-    //             children: [
-    //               Text(
-    //                 UserSession.currentUser?.fullName ?? 'no name',
-                    
-    //                 style: PersianFonts.Shabnam.copyWith(
-    //                   fontSize: 14,
-    //                   fontWeight: FontWeight.bold,
-    //                   color: Colors.black87,
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //           SizedBox(width: 12),
-    //           CircleAvatar(
-    //             radius: 18,
-    //             backgroundColor: Colors.blue[100],
-    //             child: Icon(Icons.person, color: Colors.blue[700]),
-    //           ),
-    //           SizedBox(width: 4),
-    //           IconButton(
-    //             icon: Icon(Icons.keyboard_arrow_down),
-    //             onPressed: () {
-                  
-    //             },
-    //             color: Colors.black54,
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ],
-    // );
   }
 
   Widget _buildSidebar() {
@@ -462,6 +299,15 @@ class OperatorMainLayout extends StatelessWidget {
           fontSize: 14,
           fontWeight: FontWeight.bold,
         ),
+        hoverTextStyle: PersianFonts.Shabnam.copyWith(
+          color: Color(0xFF3E68FF),
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        hoverIconTheme: IconThemeData(
+          color: Color(0xFF3E68FF),
+          size: 20,
+        ),
         itemTextPadding: EdgeInsets.only(right: 20),
         selectedItemTextPadding: EdgeInsets.only(right: 20),
         itemDecoration: BoxDecoration(
@@ -481,6 +327,7 @@ class OperatorMainLayout extends StatelessWidget {
           size: 20,
         ),
       ),
+      
       extendedTheme: SidebarXTheme(
         width: 240,
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),

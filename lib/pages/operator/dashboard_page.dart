@@ -1,13 +1,11 @@
+// dashboard_page.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persian_fonts/persian_fonts.dart';
-import 'package:telewehab/models/patient_models.dart';
+import 'package:telewehab/models/medical_file_model.dart';
 import 'package:telewehab/pages/operator/operator_controllers/dashboard_controller.dart';
 
-
-
 class DashboardPage extends StatelessWidget {
-
   final DashboardController controller = Get.put(DashboardController());
 
   DashboardPage({super.key});
@@ -18,7 +16,6 @@ class DashboardPage extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Container(
         color: Colors.white,
-        // const Color(0xFF0A0E27),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -28,32 +25,191 @@ class DashboardPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'نظارت بر بیماران VAS',
-                    style: TextStyle(
-                      color: Colors.white,
+                  Text(
+                    'نظارت بر بیماران',
+                    style: PersianFonts.Shabnam.copyWith(
+                      color: Colors.black87,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.filter_list, color: Colors.white),
-                    onPressed: () {},
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.refresh, color: Colors.black87),
+                        onPressed: () => controller.refreshData(),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.filter_list, color: Colors.black87),
+                        onPressed: () => _showFilterDialog(context),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+            
+            // Statistics Summary
+            Obx(() => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                children: [
+                  _buildStatCard(
+                    'مجموع بیماران',
+                    controller.patientsWithVAS.length.toString(),
+                    Colors.blue,
+                  ),
+                  const SizedBox(width: 12),
+                  _buildStatCard(
+                    'بحرانی',
+                    controller.getCriticalPatients().length.toString(),
+                    Colors.red,
+                  ),
+                  const SizedBox(width: 12),
+                  _buildStatCard(
+                    'اولویت بالا',
+                    controller.getHighPriorityPatients().length.toString(),
+                    Colors.orange,
+                  ),
+                ],
+              ),
+            )),
+            
+            const SizedBox(height: 16),
+            
             // Patient List
             Expanded(
-              child: Obx(() => controller.isLoading.value
-                  ? Center(child: CircularProgressIndicator(color: Color(0xFF64B5F6)))
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                      itemCount: controller.patients.length,
-                      itemBuilder: (context, index) {
-                        return PatientCard(patient: controller.patients[index]);
-                      },
-                    )),
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Color(0xFF64B5F6),
+                    ),
+                  );
+                }
+                
+                if (controller.errorMessage.value.isNotEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.error_outline, size: 48, color: Colors.red[300]),
+                        const SizedBox(height: 16),
+                        Text(
+                          controller.errorMessage.value,
+                          style: PersianFonts.Shabnam.copyWith(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => controller.refreshData(),
+                          child: const Text('تلاش مجدد', style: PersianFonts.Shabnam,),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                
+                if (controller.patientsWithVAS.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.inbox_outlined, size: 64, color: Colors.grey[400]),
+                        const SizedBox(height: 16),
+                        Text(
+                          'هیچ بیمار فعالی یافت نشد',
+                          style: PersianFonts.Shabnam.copyWith(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                
+                return RefreshIndicator(
+                  onRefresh: controller.refreshData,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    itemCount: controller.patientsWithVAS.length,
+                    itemBuilder: (context, index) {
+                      return PatientVASCard(
+                        patientWithVAS: controller.patientsWithVAS[index],
+                      );
+                    },
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatCard(String label, String value, Color color) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withOpacity(0.3)),
+        ),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: PersianFonts.Shabnam.copyWith(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: PersianFonts.Shabnam.copyWith(
+                fontSize: 12,
+                color: color.withOpacity(0.8),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showFilterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('فیلتر بیماران', style: PersianFonts.Shabnam.copyWith(fontSize: 16)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text('همه بیماران', style: PersianFonts.Shabnam.copyWith(fontSize: 16)),
+              onTap: () {
+                Navigator.pop(context);
+                controller.refreshData();
+              },
+            ),
+            ListTile(
+              title: Text('بحرانی (VAS ≥ 7)', style: PersianFonts.Shabnam.copyWith(fontSize: 16),),
+              onTap: () {
+                Navigator.pop(context);
+                controller.patientsWithVAS.value = controller.getCriticalPatients();
+              },
+            ),
+            ListTile(
+              title: Text('اولویت بالا (VAS ≥ 5)', style: PersianFonts.Shabnam.copyWith(fontSize: 16)),
+              onTap: () {
+                Navigator.pop(context);
+                controller.patientsWithVAS.value = controller.getHighPriorityPatients();
+              },
             ),
           ],
         ),
@@ -62,15 +218,13 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
+// Patient VAS Card Widget
+class PatientVASCard extends StatelessWidget {
+  final PatientWithVAS patientWithVAS;
 
+  const PatientVASCard({Key? key, required this.patientWithVAS}) : super(key: key);
 
-// Patient Card Widget
-class PatientCard extends StatelessWidget {
-  final Patient patient;
-
-  const PatientCard({Key? key, required this.patient}) : super(key: key);
-
-  Color _getVASColor(double score) {
+  Color _getVASColor(int score) {
     if (score >= 0 && score < 3) {
       return const Color(0xFF00E676); // Green
     } else if (score >= 3 && score < 5) {
@@ -82,44 +236,22 @@ class PatientCard extends StatelessWidget {
     }
   }
 
-  String _getVASLevel(double score) {
+  String _getVASLevel(int score) {
     if (score >= 0 && score < 3) return 'کم';
     if (score >= 3 && score < 5) return 'متوسط';
     if (score >= 5 && score < 7) return 'زیاد';
     return 'بحرانی';
   }
 
-  IconData _getTrendIcon(String trend) {
-    switch (trend) {
-      case 'up':
-        return Icons.trending_up;
-      case 'down':
-        return Icons.trending_down;
-      default:
-        return Icons.trending_flat;
-    }
-  }
-
-  Color _getTrendColor(String trend) {
-    switch (trend) {
-      case 'up':
-        return const Color(0xFFFF1744);
-      case 'down':
-        return const Color(0xFF00E676);
-      default:
-        return const Color(0xFF64B5F6);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final vasColor = _getVASColor(patient.vasScore);
-    final vasLevel = _getVASLevel(patient.vasScore);
+    final vasColor = _getVASColor(patientWithVAS.vasScore);
+    final vasLevel = _getVASLevel(patientWithVAS.vasScore);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -142,7 +274,7 @@ class PatientCard extends StatelessWidget {
                   width: 80,
                   height: 80,
                   child: CircularProgressIndicator(
-                    value: patient.vasScore / 10,
+                    value: patientWithVAS.vasScore / 10,
                     strokeWidth: 6,
                     backgroundColor: const Color.fromARGB(255, 170, 170, 170),
                     valueColor: AlwaysStoppedAnimation<Color>(vasColor),
@@ -152,8 +284,8 @@ class PatientCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      patient.vasScore.toStringAsFixed(1),
-                      style: TextStyle(
+                      patientWithVAS.vasScore.toString(),
+                      style: PersianFonts.Shabnam.copyWith(
                         color: vasColor,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -161,7 +293,7 @@ class PatientCard extends StatelessWidget {
                     ),
                     Text(
                       vasLevel,
-                      style: TextStyle(
+                      style: PersianFonts.Shabnam.copyWith(
                         color: vasColor.withOpacity(0.8),
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
@@ -177,61 +309,36 @@ class PatientCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          patient.fullName.toString(),
-                          style: const TextStyle(
-                            color: Colors.black87,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      // Container(
-                      //   padding: const EdgeInsets.symmetric(
-                      //     horizontal: 8,
-                      //     vertical: 4,
-                      //   ),
-                      //   decoration: BoxDecoration(
-                      //     color: _getTrendColor(patient.trend).withOpacity(0.2),
-                      //     borderRadius: BorderRadius.circular(12),
-                      //   ),
-                      //   child: Row(
-                      //     mainAxisSize: MainAxisSize.min,
-                      //     children: [
-                      //       Icon(
-                      //         _getTrendIcon(patient.trend),
-                      //         color: _getTrendColor(patient.trend),
-                      //         size: 16,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
+                  Text(
+                    patientWithVAS.patientName ?? 'بیمار ${patientWithVAS.patientNationalCode}',
+                    style: PersianFonts.Shabnam.copyWith(
+                      color: Colors.black87,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF64B5F6).withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'سن ${patient.birthDate}',
-                          style: const TextStyle(
-                            color: Color(0xFF64B5F6),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                      if (patientWithVAS.birthDate != null)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF64B5F6).withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'تاریخ تولد: ${patientWithVAS.birthDate}',
+                            style: PersianFonts.Shabnam.copyWith(
+                              color: Color(0xFF64B5F6),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
                       const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -239,12 +346,12 @@ class PatientCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white12,
+                          color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'شناسه: ${patient.id}',
-                          style: TextStyle(
+                          'کد ملی: ${patientWithVAS.patientNationalCode}',
+                          style: PersianFonts.Shabnam.copyWith(
                             color: Colors.black54,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -258,13 +365,13 @@ class PatientCard extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.access_time,
-                        color: Colors.white.withOpacity(0.4),
+                        color: Colors.black54,
                         size: 14,
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'بروزرسانی ${patient.lastUpdate}',
-                        style: TextStyle(
+                        'شروع: ${patientWithVAS.startDate}',
+                        style: PersianFonts.Shabnam.copyWith(
                           color: Colors.black54,
                           fontSize: 12,
                         ),
@@ -281,6 +388,7 @@ class PatientCard extends StatelessWidget {
               iconSize: 20,
               onPressed: () {
                 // Navigate to patient details
+                // You can pass patientWithVAS.patientNationalCode
               },
             ),
           ],
