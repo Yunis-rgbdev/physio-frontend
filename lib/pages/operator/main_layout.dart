@@ -349,7 +349,7 @@ class OperatorMainLayout extends StatelessWidget {
         ),
         SidebarXItem(
           icon: Icons.people_outline,
-          label: 'لیست بیماران',
+          label: 'جستجوی بیمار',
           onTap: () {
             _controller.selectIndex(1);
             currentIndex.value = 1;

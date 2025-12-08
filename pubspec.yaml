@@ -38,6 +38,7 @@ dependencies:
   shamsi_date: ^1.1.1
   dio: ^5.4.0
   cupertino_icons: ^1.0.8
+  logger: ^2.6.2
 
   # Fixed Persian date/time picker (Flutter 3.27+ compatible)
   persian_datetime_picker: ^3.2.0
