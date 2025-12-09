@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:persian_fonts/persian_fonts.dart';
 import 'package:logger/logger.dart';
+import 'package:telewehab/models/patient_models.dart';
 import 'package:telewehab/pages/operator/operator_controllers/dashboard_controller.dart';
 import 'package:get/get.dart';
 import 'package:telewehab/models/medical_file_model.dart';
@@ -288,6 +289,7 @@ class PatientHeader extends StatelessWidget {
                       ],
                     ),
                   ),
+
                   SizedBox(
                     width: 200,
                     child: Row(
@@ -302,7 +304,13 @@ class PatientHeader extends StatelessWidget {
                     ),
                   ),
                 ],
-              )
+              ),
+              SizedBox(height: 20,),
+              Text(
+                          // _controller.patient.value?.gender ?? 'Could not find gender',
+                          _controller.patient.value?.gender ?? 'couldnt find',
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
             ],
           )
         );

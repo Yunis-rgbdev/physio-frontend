@@ -158,7 +158,7 @@ class ApiService {
   }
 
   Future<Patient> searchPatient(String nationalCode) async {
-    final url = Uri.parse('$baseUrl/patients/search/?national_code=$nationalCode');
+    final url = Uri.parse('$baseUrl/api/patients/search/?national_code=$nationalCode');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
