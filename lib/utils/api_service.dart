@@ -1,5 +1,7 @@
 import 'dart:convert';
 // import 'package:flutter/material.dart';
+// import 'package:logger/logger.dart';
+import 'package:telewehab/utils/logger_helper.dart';
 import 'package:telewehab/models/patient_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:telewehab/models/daily_task_model.dart';
@@ -79,12 +81,12 @@ class ApiService {
   /// Combines medical files with patient details for dashboard display
   Future<List<PatientWithVAS>> getPatientsWithVASScores(String operatorNationalCode) async {
     try {
-      print('Fetching medical files for operator: $operatorNationalCode');
+      AppLoggerHelper.debug('Fetching medical files for operator: $operatorNationalCode');
       
       // Get all active medical files for this operator
       final medicalFiles = await getActiveMedicalFilesByOperator(operatorNationalCode);
       
-      print('Found ${medicalFiles.length} active medical files');
+      AppLoggerHelper.info('Found ${medicalFiles.length} active medical files');
       
       // Create list to hold combined data
       List<PatientWithVAS> patientsWithVAS = [];
@@ -93,16 +95,17 @@ class ApiService {
       for (var file in medicalFiles) {
         try {
           final patient = await getPatientByNationalCode(file.patientNationalCode);
+          AppLoggerHelper.info("patient national code from medical file ${ file.patientNationalCode } ");
           
           final patientWithVAS = PatientWithVAS.fromMedicalFile(file);
           patientWithVAS.patientName = patient.fullName;
           patientWithVAS.birthDate = patient.birthDate;
           
           patientsWithVAS.add(patientWithVAS);
-          print('Added patient: ${patient.fullName} with VAS: ${file.vasScore}');
+          AppLoggerHelper.debug('Added patient: ${patient.fullName} with VAS: ${file.vasScore}');
         } catch (e) {
           // If patient details fail, still add the VAS data
-          print('Failed to fetch patient ${file.patientNationalCode}: $e');
+          AppLoggerHelper.error('Failed to fetch patient ${file.patientNationalCode}: $e');
           patientsWithVAS.add(PatientWithVAS.fromMedicalFile(file));
         }
       }

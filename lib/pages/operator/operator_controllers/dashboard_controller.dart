@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:telewehab/models/patient_models.dart';
 import 'package:telewehab/models/medical_file_model.dart';
 import 'package:telewehab/utils/api_service.dart';
+import 'package:telewehab/utils/logger_helper.dart';
 import 'package:telewehab/utils/user_session.dart'; // Import your UserSession model
 
 class DashboardController extends GetxController {
@@ -169,7 +170,7 @@ class DashboardController extends GetxController {
         throw Exception('Operator national code not found in session');
       }
 
-      print('Loading VAS scores for operator: $operatorNationalCode');
+      AppLoggerHelper.debug('Loading VAS scores for operator: $operatorNationalCode');
 
       // Fetch patients with VAS scores
       final results = await _apiService.getPatientsWithVASScores(operatorNationalCode);
@@ -179,10 +180,10 @@ class DashboardController extends GetxController {
       // Sort by VAS score (highest first for priority viewing)
       patientsWithVAS.sort((a, b) => b.vasScore.compareTo(a.vasScore));
 
-      print('Loaded ${patientsWithVAS.length} patients with VAS scores');
+      AppLoggerHelper.info('Loaded ${patientsWithVAS.length} patients with VAS scores');
     } catch (e) {
       errorMessage.value = 'خطا در بارگذاری اطلاعات: $e';
-      print('Error loading patients with VAS: $e');
+      AppLoggerHelper.error('Error loading patients with VAS: $e');
     } finally {
       isLoading.value = false;
     }

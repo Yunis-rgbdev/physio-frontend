@@ -310,7 +310,7 @@ class PatientVASCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    patientWithVAS.patientName ?? 'بیمار ${patientWithVAS.patientNationalCode}',
+                    patientWithVAS.patientName ?? 'بیمار ${patientWithVAS.patientName}',
                     style: PersianFonts.Shabnam.copyWith(
                       color: Colors.black87,
                       fontSize: 18,
